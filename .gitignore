@@ -10,3 +10,5 @@
 *.unityproj
 *.suo
 *.zip
+/Logs/
+/*.log
