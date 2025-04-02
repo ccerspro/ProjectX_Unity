@@ -1,0 +1,12 @@
+/Library/
+/Temp/
+/Build/
+/Builds/
+/obj/
+*.csproj
+*.sln
+*.user
+*.pidb
+*.unityproj
+*.suo
+*.zip

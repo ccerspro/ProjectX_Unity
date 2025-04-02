@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: d581647d5d8fb5f4f91d3597e6fda2ca
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - infiniteCorridor: {instanceID: 0}
+  - FootStepSound: {fileID: 8300000, guid: 6a3ad892ea1377b4a9716c3136d5e4ed, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
