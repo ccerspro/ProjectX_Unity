@@ -502,6 +502,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4171152990778996729, guid: ece3557663943064c803b8651d817e0e,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 116
+      objectReference: {fileID: 0}
     - target: {fileID: 4958039274362115655, guid: ece3557663943064c803b8651d817e0e,
         type: 3}
       propertyPath: audioManager
@@ -520,8 +525,18 @@ PrefabInstance:
     - target: {fileID: 8366891373418499249, guid: ece3557663943064c803b8651d817e0e,
         type: 3}
       propertyPath: m_Name
-      value: Player (1)
+      value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8366891373418499249, guid: ece3557663943064c803b8651d817e0e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8502371206657009844, guid: ece3557663943064c803b8651d817e0e,
+        type: 3}
+      propertyPath: infiniteCorridor
+      value: 
+      objectReference: {fileID: 1696512590}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -596,7 +611,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!54 &1570152633
 Rigidbody:
   m_ObjectHideFlags: 0

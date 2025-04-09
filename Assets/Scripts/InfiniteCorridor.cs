@@ -43,12 +43,12 @@ namespace ZhouSoftware{
             Vector3 current = corridorList[1].transform.position;
             Front = Instantiate(boundaryPrefab, new Vector3(current.x - 14 * direction, current.y, current.z + (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
             Rear = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction, current.y, current.z - (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
-            classSign = Instantiate(numberSign[0], new Vector3(current.x + 3.87f, current.y + 3, current.z), Quaternion.Euler(90, -90, 0));
+            //classSign = Instantiate(numberSign[0], new Vector3(current.x + 3.87f, current.y + 3, current.z), Quaternion.Euler(90, -90, 0));
             Front.tag = "Front";
             Rear.tag = "Rear";
             Front.transform.SetParent(corridorList[1].transform);
             Rear.transform.SetParent(corridorList[1].transform);
-            classSign.transform.SetParent(corridorList[1].transform);
+            //classSign.transform.SetParent(corridorList[1].transform);
             level = 0; //start at level 0
         }
 

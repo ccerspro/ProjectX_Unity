@@ -153,6 +153,7 @@ GameObject:
   - component: {fileID: 4958039274362115655}
   - component: {fileID: 4289707531497373144}
   - component: {fileID: 5805902207167432228}
+  - component: {fileID: 8502371206657009844}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -295,6 +296,7 @@ MonoBehaviour:
   playerCamera: {fileID: 6126139040498960225}
   lookSpeed: 2
   lookXLimit: 45
+  audioManager: {fileID: 0}
   canMove: 1
 --- !u!143 &4289707531497373144
 CharacterController:
@@ -336,3 +338,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DistanceOpen: 3
   text: {fileID: 4579101897978161912, guid: 3cd9bcaed19ad29449524975868116b2, type: 3}
+--- !u!114 &8502371206657009844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8366891373418499249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08dfc4117f67035418c02bbf51591cbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  infiniteCorridor: {fileID: 0}
