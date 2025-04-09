@@ -504,8 +504,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4171152990778996729, guid: ece3557663943064c803b8651d817e0e,
         type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4171152990778996729, guid: ece3557663943064c803b8651d817e0e,
+        type: 3}
       propertyPath: m_Constraints
       value: 116
+      objectReference: {fileID: 0}
+    - target: {fileID: 4171152990778996729, guid: ece3557663943064c803b8651d817e0e,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4958039274362115655, guid: ece3557663943064c803b8651d817e0e,
         type: 3}
@@ -530,7 +540,7 @@ PrefabInstance:
     - target: {fileID: 8366891373418499249, guid: ece3557663943064c803b8651d817e0e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8502371206657009844, guid: ece3557663943064c803b8651d817e0e,
         type: 3}
@@ -611,7 +621,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1570152633
 Rigidbody:
   m_ObjectHideFlags: 0
