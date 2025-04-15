@@ -62,39 +62,33 @@ public class CameraController : MonoBehaviour
     }
 
     private void Update()
+{
+    if (Input.GetKeyDown(KeyCode.Escape))
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            // Unlock the cursor when Escape is pressed
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-
-        if (Input.GetMouseButtonDown(0) && Cursor.lockState != CursorLockMode.Locked)
-        {
-            // Lock the cursor when the user clicks
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-
-        if (!isRotating) return;
-
-        // Calculate rotation step size
-        float step = rotationSpeed * Time.deltaTime;
-
-        // Yaw (horizontal rotation) – Rotate the player body
-        Quaternion currentYaw = target.rotation;
-        Quaternion targetYaw = Quaternion.Euler(0f, target.eulerAngles.y + lookInput.x, 0f);
-        target.rotation = Quaternion.RotateTowards(currentYaw, targetYaw, step);
-
-        // Pitch (vertical rotation) – Rotate the camera
-        xRotation -= lookInput.y;  // Invert mouse Y-axis
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);  // Clamp pitch rotation
-
-        Quaternion targetPitch = Quaternion.Euler(xRotation, 0f, 0f);
-        transform.localRotation = Quaternion.RotateTowards(transform.localRotation, targetPitch, step);
-
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
+
+    if (Input.GetMouseButtonDown(0) && Cursor.lockState != CursorLockMode.Locked)
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    if (!isRotating) return;
+
+    float mouseX = lookInput.x * rotationSpeed * Time.deltaTime;
+    float mouseY = lookInput.y * rotationSpeed * Time.deltaTime;
+
+    // Yaw — rotate the player horizontally
+    target.Rotate(Vector3.up * mouseX);
+
+    // Pitch — rotate the camera vertically (clamped)
+    xRotation -= mouseY;
+    xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+    transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+}
+
 
 
 
