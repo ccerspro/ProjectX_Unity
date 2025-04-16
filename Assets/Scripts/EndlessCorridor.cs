@@ -25,6 +25,9 @@ public class EndlessCorridor : MonoBehaviour
         private GameObject NormalRear;
         private Vector3 entransLocation;
         private GameObject ReEnter;
+        [SerializeField] private float FrontOffset = 14;
+        [SerializeField] private float RearOffset = 14;
+        
          void Start()
         {
             Debug.unityLogger.logEnabled = true;

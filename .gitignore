@@ -12,3 +12,4 @@
 *.zip
 /Logs/
 /*.log
+/Game/
