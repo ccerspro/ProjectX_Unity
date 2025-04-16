@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace ZhouSoftware{
 public class EndlessCorridor : MonoBehaviour
 {
     List<GameObject> corridorList = new List<GameObject>();
@@ -338,4 +339,5 @@ public class EndlessCorridor : MonoBehaviour
             return null; // Return null if no matching child is found
         }
 
+}
 }

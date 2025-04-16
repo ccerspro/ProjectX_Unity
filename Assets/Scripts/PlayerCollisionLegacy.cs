@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using ZhouSoftware;
-public class PlayerCollisionHandle : MonoBehaviour
+public class PlayerCollisionLegacy : MonoBehaviour
 {
     public InfiniteCorridor infiniteCorridor;
 

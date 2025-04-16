@@ -19,7 +19,7 @@ namespace ZhouSoftware
         private Vector3 movementInput; // Stores movement direction
 
         private PlayerInputActions playerInputActions;
-        public InfiniteCorridor infiniteCorridor;
+        //public InfiniteCorridor infiniteCorridor;
         public AudioManager audioManager;
 
 
@@ -109,33 +109,9 @@ namespace ZhouSoftware
             currentSpeed = normalSpeed;
         }
 
-        private void OnTriggerEnter(Collider other){
-            if (other.CompareTag("Front")){
-                infiniteCorridor.OnFrontEnter();
-            }
-            else if (other.CompareTag("Rear")){
-                infiniteCorridor.OnRearEnter();
-            }
-            else if (other.CompareTag("Entrance")){
-                infiniteCorridor.OnEntranceEnter(other);
-            }
-            else if (other.CompareTag("Door")){
-                infiniteCorridor.EndGame();
-            }
-            else if (other.CompareTag("RearEntrance")){
-                infiniteCorridor.OnRearEntrance();
-            }
-            else if (other.CompareTag("SpecialRear")){
-                infiniteCorridor.OnSpecialRearEnter();
-            }
-            else if (other.CompareTag("Uturn")){
-                infiniteCorridor.OnUturn();
-            }
-            else if (other.CompareTag("ReEnter")){
-                infiniteCorridor.OnReEnter(other);
-            }
+        
           
-        }
+        
 
         private void OnQuit(InputAction.CallbackContext context)
         {
