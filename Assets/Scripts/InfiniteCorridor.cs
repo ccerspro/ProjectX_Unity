@@ -180,6 +180,9 @@ namespace ZhouSoftware{
             level = 0;
             Rear = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction, current.y, current.z - (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
             Rear.tag = "Rear";
+            Front = Instantiate(boundaryPrefab, new Vector3(current.x - 14 * direction, current.y, current.z + (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
+            Front.tag = "Front";
+            Front.transform.SetParent(corridorList[1].transform);
             Rear.transform.SetParent(corridorList[1].transform);
             classSign = Instantiate(numberSign[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
             classSign.transform.SetParent(corridorList[1].transform);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,12 +7,12 @@ namespace ZhouSoftware{
 public class EndlessCorridor : MonoBehaviour
 {
     List<GameObject> corridorList = new List<GameObject>();
-        [SerializeField] private float corridorLength = 60;
-        [SerializeField] private float corridorWidth = 32;
+        [SerializeField] private float corridorLength = 35;
+        [SerializeField] private float corridorWidth = 5;
         [SerializeField] GameObject normalPrefab;
         [SerializeField] List<GameObject> anomalyPrefab;
         [SerializeField] GameObject boundaryPrefab;
-        [SerializeField] List<GameObject> numberSign;
+        [SerializeField] List<GameObject> signList;
         private GameObject Front;
         private GameObject Rear;
         private GameObject SpecialRear;
@@ -21,7 +22,7 @@ public class EndlessCorridor : MonoBehaviour
         private int level;
         //buffer holder for direction
         private int direction = 1;
-        private GameObject classSign;
+        private GameObject roomSign;
         private GameObject NormalRear;
         private Vector3 entransLocation;
         private GameObject ReEnter;
@@ -37,16 +38,14 @@ public class EndlessCorridor : MonoBehaviour
                
                 corridorList.Add(currentCorridor);
             }
-            //create Front and Rear act as trigger collider. And create classSign to indicate level. Assign them to current section
+            //create Front and Rear act as trigger collider. And create roomSign to indicate level. Assign them to current section
             Vector3 current = corridorList[1].transform.position;
             Front = Instantiate(boundaryPrefab, new Vector3(current.x - 14 * direction, current.y, current.z + (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
             Rear = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction, current.y, current.z - (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
-            //classSign = Instantiate(numberSign[0], new Vector3(current.x + 3.87f, current.y + 3, current.z), Quaternion.Euler(90, -90, 0));
             Front.tag = "Front";
             Rear.tag = "Rear";
             Front.transform.SetParent(corridorList[1].transform);
             Rear.transform.SetParent(corridorList[1].transform);
-            //classSign.transform.SetParent(corridorList[1].transform);
             level = 0; //start at level 0
         }
 
@@ -68,7 +67,7 @@ public class EndlessCorridor : MonoBehaviour
             Destroy(corridorList[0]);
             Destroy(Front);
             Destroy(Rear);
-            Destroy(classSign);
+            Destroy(roomSign);
             corridorList[0] = corridorList[1];
             corridorList[1] = corridorList[2];
 
@@ -94,18 +93,16 @@ public class EndlessCorridor : MonoBehaviour
 
             Front = Instantiate(boundaryPrefab, new Vector3(current.x - 14 * direction, current.y, current.z + (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
             Rear = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction, current.y, current.z - (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
-            //classSign = Instantiate(numberSign[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
             Front.tag = "Front";
             Rear.tag = "Rear";
             Front.transform.SetParent(corridorList[1].transform);
             Rear.transform.SetParent(corridorList[1].transform);
-            //classSign.transform.SetParent(corridorList[1].transform);
         }
 
         public void OnRearEnter() {
             Debug.Log("OnRearEnter");
             //Destrou the old clasSign and Front&Rear boundary
-            Destroy(classSign);
+            Destroy(roomSign);
             Destroy(Rear);
             Destroy(Front);
             //Destroy the further away corridor in front and shift the list
@@ -131,8 +128,8 @@ public class EndlessCorridor : MonoBehaviour
             Rear.tag = "Rear";
             Rear.transform.SetParent(corridorList[1].transform);
 
-            classSign = Instantiate(numberSign[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
-            classSign.transform.SetParent(corridorList[1].transform);
+            roomSign = Instantiate(signList[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
+            roomSign.transform.SetParent(corridorList[1].transform);
         }
 
         public void OnEntranceEnter(Collider Entrance){
@@ -159,9 +156,9 @@ public class EndlessCorridor : MonoBehaviour
                 NormalRear.tag = "NormalRear";
                 NormalRear.transform.SetParent(corridorList[1].transform);
             }
-            if (classSign == null){
-                classSign = Instantiate(numberSign[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
-                classSign.transform.SetParent(corridorList[1].transform);
+            if (roomSign == null){
+                roomSign = Instantiate(signList[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
+                roomSign.transform.SetParent(corridorList[1].transform);
             }
             
             
@@ -178,9 +175,11 @@ public class EndlessCorridor : MonoBehaviour
             level = 0;
             Rear = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction, current.y, current.z - (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
             Rear.tag = "Rear";
+            Front = Instantiate(boundaryPrefab, new Vector3(current.x - 14 * direction, current.y, current.z + (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
+            Front.tag = "Front";
             Rear.transform.SetParent(corridorList[1].transform);
-            classSign = Instantiate(numberSign[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
-            classSign.transform.SetParent(corridorList[1].transform);
+            roomSign = Instantiate(signList[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
+            roomSign.transform.SetParent(corridorList[1].transform);
 
             Destroy(corridorList[0]);
             corridorList[0] = Instantiate(normalPrefab, new Vector3(current.x + corridorWidth * direction, 0, current.z - corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
@@ -200,7 +199,7 @@ public class EndlessCorridor : MonoBehaviour
            //Destory corridors in the end of oppsite direction. And destroy the old boundary
             Destroy(Front);
             Destroy(SpecialRear);
-            Destroy(classSign);
+            Destroy(roomSign);
             //create a Uturn collider in case the player decide to go back
 
             //shift the corridors in the scene
@@ -241,8 +240,8 @@ public class EndlessCorridor : MonoBehaviour
             RearEntrance = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction , current.y, current.z - (corridorLength / 2) * direction), Quaternion.Euler(90, 0, 0));
             RearEntrance.tag = "RearEntrance";
             RearEntrance.transform.SetParent(corridorList[1].transform);
-            //classSign = Instantiate(numberSign[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
-            //classSign.transform.SetParent(corridorList[2].transform);
+            //roomSign = Instantiate(signList[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
+            //roomSign.transform.SetParent(corridorList[2].transform);
 
             
             direction *= -1;
@@ -286,8 +285,6 @@ public class EndlessCorridor : MonoBehaviour
             corridorList[2] = currentCorridor;
             }
 
-            //classSign = Instantiate(numberSign[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
-            //classSign.transform.SetParent(corridorList[2].transform);
 
 
         }
