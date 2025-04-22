@@ -28,6 +28,9 @@ public class EndlessCorridor : MonoBehaviour
         private GameObject ReEnter;
         [SerializeField] private float FrontOffset = 14;
         [SerializeField] private float RearOffset = 14;
+        [SerializeField] private Vector3 doorOffset = new Vector3(-5, 2, 30);
+        [SerializeField] GameObject doorWallPrefab;
+        private GameObject doorWall;
         
          void Start()
         {
