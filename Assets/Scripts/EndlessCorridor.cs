@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace ZhouSoftware{
@@ -88,7 +89,7 @@ public class EndlessCorridor : MonoBehaviour
             Vector3 current = corridorList[1].transform.position;
             GameObject currentCorridor;
             //50% chance to instantiate an anomalyPrefab
-            if (UnityEngine.Random.value > 0.5f){
+            if (UnityEngine.Random.value > 0.99f){
                 currentCorridor = Instantiate(normalPrefab, new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
             } else{
                 int anomalyIndex = UnityEngine.Random.Range(0, anomalyPrefab.Count);
@@ -155,18 +156,20 @@ public class EndlessCorridor : MonoBehaviour
             
             //Destroy(corridorList[0]);
             if (Entrance.transform.parent.CompareTag("AnomalySection")){
-                SpecialRear = Instantiate(boundaryPrefab, new Vector3(entransLocation.x + 4 * direction, entransLocation.y, entransLocation.z), Quaternion.Euler(90,90,0));
+                SpecialRear = Instantiate(boundaryPrefab, new Vector3(entransLocation.x, entransLocation.y, entransLocation.z - 4 * direction), Quaternion.Euler(90,0,0));
                 //SpecialRear = Instantiate(boundaryPrefab, new Vector3(current.x + 6 * direction, current.y, current.z - 16 * direction), Quaternion.Euler(90, 90, 0));
                 SpecialRear.tag = "SpecialRear";
                 SpecialRear.transform.SetParent(corridorList[1].transform);
                 Destroy(Rear);
             } else {
-                NormalRear = Instantiate(boundaryPrefab, new Vector3(entransLocation.x + 4 * direction, entransLocation.y, entransLocation.z), Quaternion.Euler(90,90,0));
+                NormalRear = Instantiate(boundaryPrefab, new Vector3(entransLocation.x, entransLocation.y, entransLocation.z - 4 * direction), Quaternion.Euler(90,0,0));
                 NormalRear.tag = "NormalRear";
                 NormalRear.transform.SetParent(corridorList[1].transform);
             }
             if (roomSign == null){
-                roomSign = Instantiate(signList[level], current + signOffset, Quaternion.Euler(0, 0 + 90 * direction, 0));
+                Vector3 signPos = new Vector3(current.x + signOffset.x * direction, current.y + signOffset.y, current.z + signOffset.z * direction);
+                
+                roomSign = Instantiate(signList[level], signPos, Quaternion.Euler(0, 0 + 90 * direction, 0));
                 roomSign.transform.SetParent(corridorList[1].transform);
             }
             
@@ -200,7 +203,7 @@ public class EndlessCorridor : MonoBehaviour
         {
             Debug.Log("OnspecialRear");
 
-            ReEnter = Instantiate(boundaryPrefab, new Vector3(entransLocation.x - 1 * direction, entransLocation.y, entransLocation.z), Quaternion.Euler(90,90,0));
+            ReEnter = Instantiate(boundaryPrefab, new Vector3(entransLocation.x - 1 * direction, entransLocation.y, entransLocation.z), Quaternion.Euler(90, 0, 0));
             ReEnter.tag = "ReEnter";
             ReEnter.transform.SetParent(corridorList[1].transform);           
             //reverse the direction
@@ -233,10 +236,10 @@ public class EndlessCorridor : MonoBehaviour
             else if (level < 7){
                 level++;
                 if (UnityEngine.Random.value > 0.5f){
-                currentCorridor = Instantiate(normalPrefab, new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
+                currentCorridor = Instantiate(normalPrefab, current + reverseOffset, Quaternion.Euler(0, 90 - direction * 90, 0));
             } else{
                 int anomalyIndex = UnityEngine.Random.Range(0, anomalyPrefab.Count);
-                currentCorridor = Instantiate(anomalyPrefab[anomalyIndex], new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
+                currentCorridor = Instantiate(anomalyPrefab[anomalyIndex], current + reverseOffset, Quaternion.Euler(0, 90 - direction * 90, 0));
             }
             corridorList[0] = currentCorridor;
             }
@@ -246,7 +249,7 @@ public class EndlessCorridor : MonoBehaviour
             Front = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z + FrontOffset * direction), Quaternion.Euler(90, 0, 0));
             Front.tag = "Front";
             Front.transform.SetParent(corridorList[0].transform);
-            RearEntrance = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z - RearOffset* direction), Quaternion.Euler(90, 0, 0));
+            RearEntrance = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z - 1 * direction), Quaternion.Euler(90, 0, 0));
             RearEntrance.tag = "RearEntrance";
             RearEntrance.transform.SetParent(corridorList[1].transform);
             //disable the door in reversed corridor
@@ -281,7 +284,7 @@ public class EndlessCorridor : MonoBehaviour
             if(level == 8){
                 currentCorridor = Instantiate(normalPrefab, new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
                 corridorList[2] = currentCorridor;
-                DeleteDoor(corridorList[1], "Door");
+                //DeleteDoor(corridorList[1], "Door");
             }
 
             else if (level <= 7){

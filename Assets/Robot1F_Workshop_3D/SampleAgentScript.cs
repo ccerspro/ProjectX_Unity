@@ -13,7 +13,7 @@ public class SampleAgentScript : MonoBehaviour
 
     [SerializeField] private float detectionRange = 10f;
 
-    private bool isAttacking = false;
+    //private bool isAttacking = false;
     private bool hasLockedOn = false;
 
     void Start()
@@ -87,8 +87,5 @@ public class SampleAgentScript : MonoBehaviour
         
     }
 
-    void ResetAttack()
-    {
-        isAttacking = false;
-    }
+    
 }
