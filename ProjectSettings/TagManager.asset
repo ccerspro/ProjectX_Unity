@@ -19,6 +19,7 @@ TagManager:
   - NormalRear
   - ReEnter
   - Enemy
+  - End
   layers:
   - Default
   - TransparentFX

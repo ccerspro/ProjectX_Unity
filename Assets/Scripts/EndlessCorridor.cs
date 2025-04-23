@@ -227,19 +227,20 @@ public class EndlessCorridor : MonoBehaviour
 
             // Instantiate two new corridor section in reversed direction          
             //if reach the level 8. Delete the door in next section to allow player to enter the room
+            Vector3 corridorPos = new Vector3(current.x - reverseOffset.x * direction, current.y, current.z - reverseOffset.z * direction);
             if(level >= 7){
                 level = 8;
-                currentCorridor = Instantiate(normalPrefab, current + reverseOffset, Quaternion.Euler(0, 90 - direction * 90, 0));
+                currentCorridor = Instantiate(normalPrefab, corridorPos, Quaternion.Euler(0, 90 - direction * 90, 0));
                 //DeleteDoor(currentCorridor, "Door");
                 corridorList[0] = currentCorridor;
             }
             else if (level < 7){
                 level++;
                 if (UnityEngine.Random.value > 0.5f){
-                currentCorridor = Instantiate(normalPrefab, current + reverseOffset, Quaternion.Euler(0, 90 - direction * 90, 0));
+                currentCorridor = Instantiate(normalPrefab, corridorPos, Quaternion.Euler(0, 90 - direction * 90, 0));
             } else{
                 int anomalyIndex = UnityEngine.Random.Range(0, anomalyPrefab.Count);
-                currentCorridor = Instantiate(anomalyPrefab[anomalyIndex], current + reverseOffset, Quaternion.Euler(0, 90 - direction * 90, 0));
+                currentCorridor = Instantiate(anomalyPrefab[anomalyIndex], corridorPos, Quaternion.Euler(0, 90 - direction * 90, 0));
             }
             corridorList[0] = currentCorridor;
             }

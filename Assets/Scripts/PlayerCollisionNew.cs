@@ -21,7 +21,7 @@ public class PlayerCollisionNew : MonoBehaviour
             else if (other.CompareTag("Entrance")){
                 endlessCorridor.OnEntranceEnter(other);
             }
-            else if (other.CompareTag("Door")){
+            else if (other.CompareTag("End")){
                 endlessCorridor.EndGame();
             }
             else if (other.CompareTag("RearEntrance")){
