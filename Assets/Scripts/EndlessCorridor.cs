@@ -24,13 +24,17 @@ public class EndlessCorridor : MonoBehaviour
         private int direction = 1;
         private GameObject roomSign;
         private GameObject NormalRear;
+        //[SerializeField] GameObject doorWallPrefab;
+        //private GameObject doorWall;
+
+        
         private Vector3 entransLocation;
         private GameObject ReEnter;
-        [SerializeField] private float FrontOffset = 14;
-        [SerializeField] private float RearOffset = 14;
+        [SerializeField] private float FrontOffset = 32;
+        [SerializeField] private float RearOffset = 6;
         [SerializeField] private Vector3 doorOffset = new Vector3(-5, 2, 30);
-        [SerializeField] GameObject doorWallPrefab;
-        private GameObject doorWall;
+        [SerializeField] private Vector3 signOffset = new Vector3(3.87f, 3, 0);
+        
         
          void Start()
         {
@@ -43,8 +47,8 @@ public class EndlessCorridor : MonoBehaviour
             }
             //create Front and Rear act as trigger collider. And create roomSign to indicate level. Assign them to current section
             Vector3 current = corridorList[1].transform.position;
-            Front = Instantiate(boundaryPrefab, new Vector3(current.x - 14 * direction, current.y, current.z + (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
-            Rear = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction, current.y, current.z - (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
+            Front = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z + FrontOffset * direction), Quaternion.Euler(90, 0, 0));
+            Rear = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z - RearOffset * direction), Quaternion.Euler(90, 0, 0));
             Front.tag = "Front";
             Rear.tag = "Rear";
             Front.transform.SetParent(corridorList[1].transform);
@@ -94,8 +98,8 @@ public class EndlessCorridor : MonoBehaviour
             corridorList[2] = currentCorridor;
             //current = corridorList[1].transform.position;
 
-            Front = Instantiate(boundaryPrefab, new Vector3(current.x - 14 * direction, current.y, current.z + (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
-            Rear = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction, current.y, current.z - (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
+            Front = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z + FrontOffset * direction), Quaternion.Euler(90, 0, 0));
+            Rear = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z - RearOffset * direction), Quaternion.Euler(90, 0, 0));
             Front.tag = "Front";
             Rear.tag = "Rear";
             Front.transform.SetParent(corridorList[1].transform);
@@ -124,14 +128,15 @@ public class EndlessCorridor : MonoBehaviour
             currentCorridor = Instantiate(normalPrefab, new Vector3(current.x + corridorWidth * direction, 0, current.z - corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
             corridorList[0] = currentCorridor;
 
-            Front = Instantiate(boundaryPrefab, new Vector3(current.x - 14 * direction, current.y, current.z + (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
+            Front = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z + FrontOffset * direction), Quaternion.Euler(90, 0, 0));
             Front.tag = "Front";
             Front.transform.SetParent(corridorList[1].transform);
-            Rear = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction, current.y, current.z - (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
+            Rear = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z - RearOffset * direction), Quaternion.Euler(90, 0, 0));
             Rear.tag = "Rear";
             Rear.transform.SetParent(corridorList[1].transform);
 
-            roomSign = Instantiate(signList[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
+            //roomSign = Instantiate(signList[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
+            roomSign = Instantiate(signList[level], current + signOffset, Quaternion.Euler(0, 0 + 90 * direction, 0));
             roomSign.transform.SetParent(corridorList[1].transform);
         }
 
@@ -160,7 +165,7 @@ public class EndlessCorridor : MonoBehaviour
                 NormalRear.transform.SetParent(corridorList[1].transform);
             }
             if (roomSign == null){
-                roomSign = Instantiate(signList[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
+                roomSign = Instantiate(signList[level], current + signOffset, Quaternion.Euler(0, 0 + 90 * direction, 0));
                 roomSign.transform.SetParent(corridorList[1].transform);
             }
             
@@ -176,12 +181,12 @@ public class EndlessCorridor : MonoBehaviour
             Vector3 current = corridorList[1].transform.position;
             Destroy(RearEntrance);
             level = 0;
-            Rear = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction, current.y, current.z - (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
+            Rear = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z - RearOffset * direction), Quaternion.Euler(90, 0, 0));
             Rear.tag = "Rear";
-            Front = Instantiate(boundaryPrefab, new Vector3(current.x - 14 * direction, current.y, current.z + (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
+            Front = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z + FrontOffset * direction), Quaternion.Euler(90, 0, 0));
             Front.tag = "Front";
             Rear.transform.SetParent(corridorList[1].transform);
-            roomSign = Instantiate(signList[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
+            roomSign = Instantiate(signList[level], current + signOffset, Quaternion.Euler(0, 0 + 90 * direction, 0));
             roomSign.transform.SetParent(corridorList[1].transform);
 
             Destroy(corridorList[0]);
@@ -237,14 +242,12 @@ public class EndlessCorridor : MonoBehaviour
 
             //generate another corridor beyond current one.
             current = corridorList[0].transform.position;
-            Front = Instantiate(boundaryPrefab, new Vector3(current.x - 14 * direction, current.y, current.z + (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
+            Front = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z + FrontOffset * direction), Quaternion.Euler(90, 0, 0));
             Front.tag = "Front";
             Front.transform.SetParent(corridorList[0].transform);
-            RearEntrance = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction , current.y, current.z - (corridorLength / 2) * direction), Quaternion.Euler(90, 0, 0));
+            RearEntrance = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z - RearOffset* direction), Quaternion.Euler(90, 0, 0));
             RearEntrance.tag = "RearEntrance";
             RearEntrance.transform.SetParent(corridorList[1].transform);
-            //roomSign = Instantiate(signList[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
-            //roomSign.transform.SetParent(corridorList[2].transform);
 
             
             direction *= -1;
@@ -266,7 +269,7 @@ public class EndlessCorridor : MonoBehaviour
             corridorList[1] = corridorList[0];
             corridorList [0] = temp;
             Vector3 current = corridorList[1].transform.position;
-            Rear = Instantiate(boundaryPrefab, new Vector3(current.x + 14 * direction, current.y, current.z - (corridorLength / 2 + 1) * direction), Quaternion.Euler(90, 0, 0));
+            Rear = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z - RearOffset * direction), Quaternion.Euler(90, 0, 0));
             Rear.tag = "Rear";
             Rear.transform.SetParent(corridorList[1].transform);
 
