@@ -1,11 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace ZhouSoftware{
     public class InfiniteCorridor : MonoBehaviour

@@ -15,6 +15,7 @@ namespace ZhouSoftware
         private InputAction quitAction;
 
 
+
         private Rigidbody rb; // Reference to Rigidbody component
         private Vector3 movementInput; // Stores movement direction
 
@@ -52,6 +53,7 @@ namespace ZhouSoftware
             playerInputActions.Player.Sprint.canceled += OnSprintRelease;
             playerInputActions.Player.Sprint.Enable();
             quitAction.performed += OnQuit;
+            playerInputActions.Player.Reset.performed += OnReset;
 
             // Set default speed
             currentSpeed = normalSpeed;
@@ -75,6 +77,13 @@ namespace ZhouSoftware
             movementInput = new Vector3(input.x, 0, input.y).normalized;
             HandleFootsteps();
         }
+        private void OnReset(InputAction.CallbackContext context)
+        {
+            // Relod the current scene
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+
+        }
+        
 
         private void HandleFootsteps()
         {

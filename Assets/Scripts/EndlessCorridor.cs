@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace ZhouSoftware{
@@ -89,7 +86,7 @@ public class EndlessCorridor : MonoBehaviour
             Vector3 current = corridorList[1].transform.position;
             GameObject currentCorridor;
             //50% chance to instantiate an anomalyPrefab
-            if (UnityEngine.Random.value > 0.99f){
+            if (UnityEngine.Random.value > 0.5f){
                 currentCorridor = Instantiate(normalPrefab, new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
             } else{
                 int anomalyIndex = UnityEngine.Random.Range(0, anomalyPrefab.Count);
