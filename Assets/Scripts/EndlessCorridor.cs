@@ -34,6 +34,7 @@ public class EndlessCorridor : MonoBehaviour
         [SerializeField] private float RearOffset = 6;
         [SerializeField] private Vector3 doorOffset = new Vector3(-5, 2, 30);
         [SerializeField] private Vector3 signOffset = new Vector3(3.87f, 3, 0);
+        [SerializeField] private Vector3 reverseOffset = new Vector3(6.38f, 0, -8.21f);
         
         
          void Start()
@@ -225,7 +226,7 @@ public class EndlessCorridor : MonoBehaviour
             //if reach the level 8. Delete the door in next section to allow player to enter the room
             if(level >= 7){
                 level = 8;
-                currentCorridor = Instantiate(normalPrefab, new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
+                currentCorridor = Instantiate(normalPrefab, current + reverseOffset, Quaternion.Euler(0, 90 - direction * 90, 0));
                 //DeleteDoor(currentCorridor, "Door");
                 corridorList[0] = currentCorridor;
             }
@@ -248,6 +249,8 @@ public class EndlessCorridor : MonoBehaviour
             RearEntrance = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z - RearOffset* direction), Quaternion.Euler(90, 0, 0));
             RearEntrance.tag = "RearEntrance";
             RearEntrance.transform.SetParent(corridorList[1].transform);
+            //disable the door in reversed corridor
+            DeleteDoor(corridorList[0], "Door");
 
             
             direction *= -1;

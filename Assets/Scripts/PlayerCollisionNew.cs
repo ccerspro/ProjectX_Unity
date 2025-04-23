@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using ZhouSoftware;
 
 public class PlayerCollisionNew : MonoBehaviour
@@ -33,6 +35,10 @@ public class PlayerCollisionNew : MonoBehaviour
             }
             else if (other.CompareTag("ReEnter")){
                 endlessCorridor.OnReEnter(other);
+            }
+            else if (other.CompareTag("Enemy")){
+                //reload the scene
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);      
             }
           
         }
