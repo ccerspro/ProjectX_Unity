@@ -10,6 +10,7 @@ public class DestroyManager : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            Destroy(gameObject); // Destroy the trigger object itself
             foreach (GameObject obj in objectsToDestroy)
             {
                 if (obj != null)

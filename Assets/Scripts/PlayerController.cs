@@ -13,6 +13,7 @@ namespace ZhouSoftware
 
         private InputAction moveAction;
         private InputAction quitAction;
+        private InputAction resetAction;
 
 
 
@@ -29,6 +30,7 @@ namespace ZhouSoftware
             // Initialize input actions
             playerInputActions = new PlayerInputActions();
             quitAction = playerInputActions.Player.Quit;
+            resetAction = playerInputActions.Player.Reset;
 
             // Get Rigidbody component
             rb = GetComponent<Rigidbody>();
@@ -47,13 +49,15 @@ namespace ZhouSoftware
             moveAction = playerInputActions.Player.Move;
             moveAction.Enable();
             quitAction.Enable();
+            resetAction.Enable();
 
             // Enable sprint actions
             playerInputActions.Player.Sprint.performed += OnSprint;
             playerInputActions.Player.Sprint.canceled += OnSprintRelease;
             playerInputActions.Player.Sprint.Enable();
             quitAction.performed += OnQuit;
-            playerInputActions.Player.Reset.performed += OnReset;
+            
+            resetAction.performed += OnReset;
 
             // Set default speed
             currentSpeed = normalSpeed;

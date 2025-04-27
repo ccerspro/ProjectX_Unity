@@ -49,7 +49,7 @@ namespace DoorScript
                 if (autoCloseCoroutine != null)
                     StopCoroutine(autoCloseCoroutine);
 
-                autoCloseCoroutine = StartCoroutine(AutoCloseAfterDelay(5f));
+                autoCloseCoroutine = StartCoroutine(AutoCloseAfterDelay(3f));
             }
             else
             {
