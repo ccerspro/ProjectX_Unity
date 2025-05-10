@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+//This is the new CorridorGenerator script designed to replace the old one. It is for the Project X
 
 namespace ZhouSoftware{
 public class EndlessCorridor : MonoBehaviour
@@ -9,17 +10,20 @@ public class EndlessCorridor : MonoBehaviour
         [SerializeField] private float corridorWidth = 5;
         [SerializeField] GameObject normalPrefab;
         [SerializeField] List<GameObject> anomalyPrefab;
+        //a collider object represent the boundary in the game. Used as trigger. Need to be tagged by this script.
         [SerializeField] GameObject boundaryPrefab;
+        //list of sign objects that will be use in game
         [SerializeField] List<GameObject> signList;
         private GameObject Front;
         private GameObject Rear;
         private GameObject SpecialRear;
         private GameObject RearEntrance;
-        private GameObject Uturn;
+        private GameObject Uturn;// not used as of now
         private Collider EntranceHolder;
         private int level;
         //buffer holder for direction
         private int direction = 1;
+        //hold the reference to the current sign object
         private GameObject roomSign;
         private GameObject NormalRear;
         //[SerializeField] GameObject doorWallPrefab;
@@ -28,6 +32,8 @@ public class EndlessCorridor : MonoBehaviour
         
         private Vector3 entransLocation;
         private GameObject ReEnter;
+
+        //offset variable. Can be adjust accordingly
         [SerializeField] private float FrontOffset = 32;
         [SerializeField] private float RearOffset = 6;
         [SerializeField] private Vector3 doorOffset = new Vector3(-5, 2, 30);
