@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 //This is the new CorridorGenerator script designed to replace the old one. It is for the Project X
 
@@ -39,15 +40,14 @@ public class EndlessCorridor : MonoBehaviour
         [SerializeField] private Vector3 doorOffset = new Vector3(-5, 2, 30);
         [SerializeField] private Vector3 signOffset = new Vector3(3.87f, 3, 0);
         [SerializeField] private Vector3 reverseOffset = new Vector3(6.38f, 0, -8.21f);
-        
-        
+
+
          void Start()
         {
             Debug.unityLogger.logEnabled = true;
             //initialize 3 sections
             for (int i = 0; i < 3; i++){
                 GameObject currentCorridor = Instantiate(normalPrefab, new Vector3(-corridorWidth * i, 0, corridorLength * i), Quaternion.Euler(0, 90 - direction * 90, 0));
-               
                 corridorList.Add(currentCorridor);
             }
             //create Front and Rear act as trigger collider. And create roomSign to indicate level. Assign them to current section
