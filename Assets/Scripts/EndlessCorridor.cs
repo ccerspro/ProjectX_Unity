@@ -28,8 +28,8 @@ public class EndlessCorridor : MonoBehaviour
         //hold the reference to the current sign object
         private GameObject roomSign;
         private GameObject NormalRear;
-        //[SerializeField] GameObject doorWallPrefab;
-        //private GameObject doorWall;
+        [SerializeField] GameObject doorWallPrefab;
+        private GameObject doorWall;
 
         
         private Vector3 entransLocation;
@@ -60,6 +60,13 @@ public class EndlessCorridor : MonoBehaviour
             Front.transform.SetParent(corridorList[1].transform);
             Rear.transform.SetParent(corridorList[1].transform);
             level = 0; //start at level 0
+
+            //Instantiate the doorwall in the beginning
+            doorWall = Instantiate(doorWallPrefab, new Vector3(current.x + doorOffset.x * direction, current.y + doorOffset.y, current.z + doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
+            doorWall.transform.SetParent(corridorList[1].transform);
+            Vector3 temp = corridorList[0].transform.position;
+            doorWall = Instantiate(doorWallPrefab, new Vector3(temp.x + doorOffset.x * direction, temp.y + doorOffset.y, temp.z + doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
+            doorWall.transform.SetParent(corridorList[0].transform);
         }
 
         //player trigger Front boundary. Generate 1 new section and destroy 1 current section. Shift the corridorList
