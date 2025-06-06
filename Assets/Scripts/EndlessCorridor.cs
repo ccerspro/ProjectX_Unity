@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-//This is the new CorridorGenerator script designed to replace the old one. It is for the Project X
+//This is the new CorridorGenerator script designed to replace the old one（InfiniteCorridor). It is for the Project X
 //Attemp to add modular intersection(of doorwall)
 
 namespace ZhouSoftware{
