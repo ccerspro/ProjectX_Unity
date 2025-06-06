@@ -33,7 +33,7 @@ public class PlayerCollisionNew : MonoBehaviour
             else if (other.CompareTag("ReEnter")){
                 endlessCorridor.OnReEnter(other);
             }
-            else if (other.CompareTag("Enemy")){
+            else if (other.CompareTag("Enemy") || other.CompareTag("DeathZone")){
                 //reload the scene
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);      
             }
