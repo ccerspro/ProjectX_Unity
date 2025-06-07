@@ -62,11 +62,11 @@ public class EndlessCorridor : MonoBehaviour
             level = 0; //start at level 0
 
             //Instantiate the doorwall in the beginning
-            doorWall = Instantiate(doorWallPrefab, new Vector3(current.x + doorOffset.x * direction, current.y + doorOffset.y, current.z + doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
-            doorWall.transform.SetParent(corridorList[1].transform);
-            Vector3 temp = corridorList[0].transform.position;
-            doorWall = Instantiate(doorWallPrefab, new Vector3(temp.x + doorOffset.x * direction, temp.y + doorOffset.y, temp.z + doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
-            doorWall.transform.SetParent(corridorList[0].transform);
+            doorWall = Instantiate(doorWallPrefab, new Vector3(current.x - doorOffset.x * direction, current.y + doorOffset.y, current.z - doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
+            //doorWall.transform.SetParent(corridorList[1].transform);
+            Vector3 temp = corridorList[0].transform.position; //the temp position is purely for the use of doorWall instantiation
+            //doorWall = Instantiate(doorWallPrefab, new Vector3(temp.x + doorOffset.x * direction, temp.y + doorOffset.y, temp.z + doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
+            //doorWall.transform.SetParent(corridorList[0].transform);
         }
 
         //player trigger Front boundary. Generate 1 new section and destroy 1 current section. Shift the corridorList
