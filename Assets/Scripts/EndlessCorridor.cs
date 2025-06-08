@@ -12,6 +12,7 @@ namespace ZhouSoftware{
         6/8/2025:
             Attempt to maintain 3 doorwall objects during runtime. The doorwalls will be separated from the corridorList.
             The doorwall will be instantiated in the Start() method and will be used to represent the door in the game.
+            Modularized doorwall completed.
     */
     //
     public class EndlessCorridor : MonoBehaviour
