@@ -73,12 +73,7 @@ namespace ZhouSoftware{
             Rear.transform.SetParent(corridorList[1].transform);
             level = 0; //start at level 0
 
-            //Instantiate the doorwall in the beginning
-            //doorWallList[1] = Instantiate(doorWallPrefab, new Vector3(current.x - doorOffset.x * direction, current.y + doorOffset.y, current.z - doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
-            //doorWall.transform.SetParent(corridorList[1].transform);
-            //Vector3 temp = corridorList[0].transform.position; //the temp position is purely for the use of doorWall instantiation
-            //doorWall = Instantiate(doorWallPrefab, new Vector3(temp.x + doorOffset.x * direction, temp.y + doorOffset.y, temp.z + doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
-            //doorWall.transform.SetParent(corridorList[0].transform);
+            
         }
 
         //player trigger Front boundary. Generate 1 new section and destroy 1 current section. Shift the corridorList
@@ -137,6 +132,13 @@ namespace ZhouSoftware{
             Rear.tag = "Rear";
             Front.transform.SetParent(corridorList[1].transform);
             Rear.transform.SetParent(corridorList[1].transform);
+
+            //DoorwallList management
+            Destroy(doorWallList[0]);
+            doorWallList[0] = doorWallList[1];
+            doorWallList[1] = doorWallList[2];
+            GameObject currentDoorWall = Instantiate(doorWallPrefab, new Vector3(current.x - corridorWidth * direction - doorOffset.x * direction, doorOffset.y, current.z + corridorLength * direction - doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
+            doorWallList[2] = currentDoorWall;
         }
 
         public void OnRearEnter()
@@ -173,6 +175,13 @@ namespace ZhouSoftware{
             //roomSign = Instantiate(signList[level], new Vector3(current.x + 3.87f * direction, current.y + 3, current.z), Quaternion.Euler(90, 0 - 90 * direction, 0));
             roomSign = Instantiate(signList[level], current + signOffset, Quaternion.Euler(0, 0 + 90 * direction, 0));
             roomSign.transform.SetParent(corridorList[1].transform);
+
+            //DoorWallList management
+            Destroy(doorWallList[2]);
+            doorWallList[2] = doorWallList[1];
+            doorWallList[1] = doorWallList[0];
+            GameObject currentDoorWall = Instantiate(doorWallPrefab, new Vector3(current.x + corridorWidth * direction - doorOffset.x * direction, doorOffset.y, current.z - corridorLength * direction - doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
+            doorWallList[0] = currentDoorWall;
         }
 
         public void OnEntranceEnter(Collider Entrance)
@@ -210,9 +219,8 @@ namespace ZhouSoftware{
                 roomSign = Instantiate(signList[level], signPos, Quaternion.Euler(0, 0 + 90 * direction, 0));
                 roomSign.transform.SetParent(corridorList[1].transform);
             }
-
-
         }
+
 
         //handle scenario while player pass the special but turn back before RearEntrance
         public void OnReEnter(Collider c)
