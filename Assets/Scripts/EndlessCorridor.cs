@@ -1,13 +1,22 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-//This is the new CorridorGenerator script designed to replace the old one（InfiniteCorridor). It is for the Project X
-//Attemp to add modular intersection(of doorwall)
+
 
 namespace ZhouSoftware{
-public class EndlessCorridor : MonoBehaviour
-{
-    List<GameObject> corridorList = new List<GameObject>();
+    //This is the new CorridorGenerator script designed to replace the old one（InfiniteCorridor). It is for the Project X
+    /*
+    Dev Log:
+        5/28/2025:
+            Start working on a new separate doorWall prefab that will be used in the game.
+        6/8/2025:
+            Attempt to maintain 3 doorwall objects during runtime. The doorwalls will be separated from the corridorList.
+            The doorwall will be instantiated in the Start() method and will be used to represent the door in the game.
+    */
+    //
+    public class EndlessCorridor : MonoBehaviour
+    {
+        List<GameObject> corridorList = new List<GameObject>();
         [SerializeField] private float corridorLength = 35;
         [SerializeField] private float corridorWidth = 5;
         [SerializeField] GameObject normalPrefab;
@@ -31,7 +40,7 @@ public class EndlessCorridor : MonoBehaviour
         [SerializeField] GameObject doorWallPrefab;
         private GameObject doorWall;
 
-        
+
         private Vector3 entransLocation;
         private GameObject ReEnter;
 
@@ -43,11 +52,12 @@ public class EndlessCorridor : MonoBehaviour
         [SerializeField] private Vector3 reverseOffset = new Vector3(6.38f, 0, -8.21f);
 
 
-         void Start()
+        void Start()
         {
             Debug.unityLogger.logEnabled = true;
             //initialize 3 sections
-            for (int i = 0; i < 3; i++){
+            for (int i = 0; i < 3; i++)
+            {
                 GameObject currentCorridor = Instantiate(normalPrefab, new Vector3(-corridorWidth * i, 0, corridorLength * i), Quaternion.Euler(0, 90 - direction * 90, 0));
                 corridorList.Add(currentCorridor);
             }
@@ -70,18 +80,22 @@ public class EndlessCorridor : MonoBehaviour
         }
 
         //player trigger Front boundary. Generate 1 new section and destroy 1 current section. Shift the corridorList
-        public void OnFrontEnter() {
+        public void OnFrontEnter()
+        {
             Debug.Log("OnFrontEnter");
             //check for the tag of current section. When normal increment the level
-            if (corridorList[1].CompareTag("NormalSection")){
-                if (level < 8){
+            if (corridorList[1].CompareTag("NormalSection"))
+            {
+                if (level < 8)
+                {
                     level++;
                 }
             }
             //when player go forward in anomalySection. Set the level back to 0
-            else if (corridorList[1].CompareTag("AnomalySection")){
+            else if (corridorList[1].CompareTag("AnomalySection"))
+            {
                 level = 0;
-            } 
+            }
 
             //Destory corridors in the end of oppsite direction. And destroy the old boundary and class sign
             Destroy(corridorList[0]);
@@ -92,7 +106,8 @@ public class EndlessCorridor : MonoBehaviour
             corridorList[1] = corridorList[2];
 
             //if the current section is level 8 and normal section. Then delete the door so player can exit the game
-            if(level == 8 && corridorList[1].CompareTag("NormalSection")){
+            if (level == 8 && corridorList[1].CompareTag("NormalSection"))
+            {
                 DeleteDoor(corridorList[1], "Door");
             }
             //shift the corridors in the scene
@@ -100,13 +115,16 @@ public class EndlessCorridor : MonoBehaviour
             Vector3 current = corridorList[1].transform.position;
             GameObject currentCorridor;
             //50% chance to instantiate an anomalyPrefab
-            if (UnityEngine.Random.value > 0.5f){
+            if (UnityEngine.Random.value > 0.5f)
+            {
                 currentCorridor = Instantiate(normalPrefab, new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
-            } else{
+            }
+            else
+            {
                 int anomalyIndex = UnityEngine.Random.Range(0, anomalyPrefab.Count);
                 currentCorridor = Instantiate(anomalyPrefab[anomalyIndex], new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
             }
-            
+
             //add the new corridor to the list
             corridorList[2] = currentCorridor;
             //current = corridorList[1].transform.position;
@@ -119,7 +137,8 @@ public class EndlessCorridor : MonoBehaviour
             Rear.transform.SetParent(corridorList[1].transform);
         }
 
-        public void OnRearEnter() {
+        public void OnRearEnter()
+        {
             Debug.Log("OnRearEnter");
             //Destrou the old clasSign and Front&Rear boundary
             Destroy(roomSign);
@@ -131,7 +150,8 @@ public class EndlessCorridor : MonoBehaviour
             corridorList[1] = corridorList[0];
             level = 0;
 
-            if (EntranceHolder != null){
+            if (EntranceHolder != null)
+            {
                 EntranceHolder.enabled = true;
             }
 
@@ -153,42 +173,48 @@ public class EndlessCorridor : MonoBehaviour
             roomSign.transform.SetParent(corridorList[1].transform);
         }
 
-        public void OnEntranceEnter(Collider Entrance){
+        public void OnEntranceEnter(Collider Entrance)
+        {
             Debug.Log($"OnEntrance enter level {level}");
             Vector3 current = corridorList[1].transform.position;
 
             //replacing the old 2 corridors
-            
+
             //Destroy(Entrance);
 
             Entrance.enabled = false;
             EntranceHolder = Entrance;
             entransLocation = Entrance.gameObject.transform.position;
-            
+
             //Destroy(corridorList[0]);
-            if (Entrance.transform.parent.CompareTag("AnomalySection")){
-                SpecialRear = Instantiate(boundaryPrefab, new Vector3(entransLocation.x, entransLocation.y, entransLocation.z - 4 * direction), Quaternion.Euler(90,0,0));
+            if (Entrance.transform.parent.CompareTag("AnomalySection"))
+            {
+                SpecialRear = Instantiate(boundaryPrefab, new Vector3(entransLocation.x, entransLocation.y, entransLocation.z - 4 * direction), Quaternion.Euler(90, 0, 0));
                 //SpecialRear = Instantiate(boundaryPrefab, new Vector3(current.x + 6 * direction, current.y, current.z - 16 * direction), Quaternion.Euler(90, 90, 0));
                 SpecialRear.tag = "SpecialRear";
                 SpecialRear.transform.SetParent(corridorList[1].transform);
                 Destroy(Rear);
-            } else {
-                NormalRear = Instantiate(boundaryPrefab, new Vector3(entransLocation.x, entransLocation.y, entransLocation.z - 4 * direction), Quaternion.Euler(90,0,0));
+            }
+            else
+            {
+                NormalRear = Instantiate(boundaryPrefab, new Vector3(entransLocation.x, entransLocation.y, entransLocation.z - 4 * direction), Quaternion.Euler(90, 0, 0));
                 NormalRear.tag = "NormalRear";
                 NormalRear.transform.SetParent(corridorList[1].transform);
             }
-            if (roomSign == null){
+            if (roomSign == null)
+            {
                 Vector3 signPos = new Vector3(current.x + signOffset.x * direction, current.y + signOffset.y, current.z + signOffset.z * direction);
-                
+
                 roomSign = Instantiate(signList[level], signPos, Quaternion.Euler(0, 0 + 90 * direction, 0));
                 roomSign.transform.SetParent(corridorList[1].transform);
             }
-            
-            
+
+
         }
 
         //handle scenario while player pass the special but turn back before RearEntrance
-        public void OnReEnter(Collider c){
+        public void OnReEnter(Collider c)
+        {
             Debug.Log("OnReEnter");
             Destroy(ReEnter);
 
@@ -216,10 +242,10 @@ public class EndlessCorridor : MonoBehaviour
 
             ReEnter = Instantiate(boundaryPrefab, new Vector3(entransLocation.x - 1 * direction, entransLocation.y, entransLocation.z), Quaternion.Euler(90, 0, 0));
             ReEnter.tag = "ReEnter";
-            ReEnter.transform.SetParent(corridorList[1].transform);           
+            ReEnter.transform.SetParent(corridorList[1].transform);
             //reverse the direction
             direction *= -1;
-           //Destory corridors in the end of oppsite direction. And destroy the old boundary
+            //Destory corridors in the end of oppsite direction. And destroy the old boundary
             Destroy(Front);
             Destroy(SpecialRear);
             Destroy(roomSign);
@@ -239,21 +265,26 @@ public class EndlessCorridor : MonoBehaviour
             // Instantiate two new corridor section in reversed direction          
             //if reach the level 8. Delete the door in next section to allow player to enter the room
             Vector3 corridorPos = new Vector3(current.x - reverseOffset.x * direction, current.y, current.z - reverseOffset.z * direction);
-            if(level >= 7){
+            if (level >= 7)
+            {
                 level = 8;
                 currentCorridor = Instantiate(normalPrefab, corridorPos, Quaternion.Euler(0, 90 - direction * 90, 0));
                 //DeleteDoor(currentCorridor, "Door");
                 corridorList[0] = currentCorridor;
             }
-            else if (level < 7){
+            else if (level < 7)
+            {
                 level++;
-                if (UnityEngine.Random.value > 0.5f){
-                currentCorridor = Instantiate(normalPrefab, corridorPos, Quaternion.Euler(0, 90 - direction * 90, 0));
-            } else{
-                int anomalyIndex = UnityEngine.Random.Range(0, anomalyPrefab.Count);
-                currentCorridor = Instantiate(anomalyPrefab[anomalyIndex], corridorPos, Quaternion.Euler(0, 90 - direction * 90, 0));
-            }
-            corridorList[0] = currentCorridor;
+                if (UnityEngine.Random.value > 0.5f)
+                {
+                    currentCorridor = Instantiate(normalPrefab, corridorPos, Quaternion.Euler(0, 90 - direction * 90, 0));
+                }
+                else
+                {
+                    int anomalyIndex = UnityEngine.Random.Range(0, anomalyPrefab.Count);
+                    currentCorridor = Instantiate(anomalyPrefab[anomalyIndex], corridorPos, Quaternion.Euler(0, 90 - direction * 90, 0));
+                }
+                corridorList[0] = currentCorridor;
             }
 
             //generate another corridor beyond current one.
@@ -267,7 +298,7 @@ public class EndlessCorridor : MonoBehaviour
             //disable the door in reversed corridor
             DeleteDoor(corridorList[0], "Door");
 
-            
+
             direction *= -1;
         }
 
@@ -285,7 +316,7 @@ public class EndlessCorridor : MonoBehaviour
             Destroy(corridorList[2]);
             GameObject temp = corridorList[1];
             corridorList[1] = corridorList[0];
-            corridorList [0] = temp;
+            corridorList[0] = temp;
             Vector3 current = corridorList[1].transform.position;
             Rear = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z - RearOffset * direction), Quaternion.Euler(90, 0, 0));
             Rear.tag = "Rear";
@@ -293,40 +324,47 @@ public class EndlessCorridor : MonoBehaviour
 
             //generate new front most corridor
             GameObject currentCorridor;
-            if(level == 8){
+            if (level == 8)
+            {
                 currentCorridor = Instantiate(normalPrefab, new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
                 corridorList[2] = currentCorridor;
                 //DeleteDoor(corridorList[1], "Door");
             }
 
-            else if (level <= 7){
-                if (UnityEngine.Random.value > 0.5f){
-                currentCorridor = Instantiate(normalPrefab, new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
-            } else{
-                int anomalyIndex = UnityEngine.Random.Range(0, anomalyPrefab.Count);
-                currentCorridor = Instantiate(anomalyPrefab[anomalyIndex], new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
-            }
-            corridorList[2] = currentCorridor;
+            else if (level <= 7)
+            {
+                if (UnityEngine.Random.value > 0.5f)
+                {
+                    currentCorridor = Instantiate(normalPrefab, new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
+                }
+                else
+                {
+                    int anomalyIndex = UnityEngine.Random.Range(0, anomalyPrefab.Count);
+                    currentCorridor = Instantiate(anomalyPrefab[anomalyIndex], new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
+                }
+                corridorList[2] = currentCorridor;
             }
 
 
 
         }
 
-        public void EndGame(){
+        public void EndGame()
+        {
             Debug.Log("Exiting the game...");
-            #if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false; // Stop play mode in the editor
-            #else
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false; // Stop play mode in the editor
+#else
                     Application.Quit(); // Quit the application
-            #endif
+#endif
         }
 
-        public void OnUturn(){
+        public void OnUturn()
+        {
 
         }
 
-         void DeleteDoor(GameObject parentObject, string tag)
+        void DeleteDoor(GameObject parentObject, string tag)
         {
             // Check if the parent object exists
             if (parentObject == null)
@@ -341,7 +379,7 @@ public class EndlessCorridor : MonoBehaviour
 
             if (child != null)
             {
-                
+
                 Destroy(child);
             }
             else
@@ -363,5 +401,5 @@ public class EndlessCorridor : MonoBehaviour
             return null; // Return null if no matching child is found
         }
 
-}
+    }
 }
