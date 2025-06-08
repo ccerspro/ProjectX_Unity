@@ -3341,9 +3341,11 @@ MonoBehaviour:
   - {fileID: 6208583423952861965, guid: 73b60215918ab244ea28d268b7c0e2d2, type: 3}
   - {fileID: 5889435428991152712, guid: 2b0edf8922aa1b74a8e4aad87c4ea326, type: 3}
   - {fileID: 3456071231283220253, guid: fee720adc7f81994dbd547c871da95fa, type: 3}
+  doorWallPrefab: {fileID: 4910040468296501738, guid: e25640ff3023e8e46bc28270ec9b03ad,
+    type: 3}
   FrontOffset: 31
   RearOffset: 6
-  doorOffset: {x: -5, y: 2, z: 30}
+  doorOffset: {x: 0, y: 2, z: 5}
   signOffset: {x: -4, y: 2.5, z: 8.5}
   reverseOffset: {x: 6.38, y: 0, z: -8.21}
 --- !u!1 &1707991183 stripped
