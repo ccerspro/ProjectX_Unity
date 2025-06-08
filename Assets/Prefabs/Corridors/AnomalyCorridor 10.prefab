@@ -2572,7 +2572,7 @@ PrefabInstance:
     - target: {fileID: 1179945904654651487, guid: 0cbae14b9aa6a2d41967f5ac3c98cfdf,
         type: 3}
       propertyPath: m_Name
-      value: startWall
+      value: anomaly
       objectReference: {fileID: 0}
     - target: {fileID: 2191606041548141457, guid: 0cbae14b9aa6a2d41967f5ac3c98cfdf,
         type: 3}
