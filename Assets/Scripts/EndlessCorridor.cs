@@ -38,7 +38,7 @@ namespace ZhouSoftware{
         private GameObject roomSign;
         private GameObject NormalRear;
         [SerializeField] GameObject doorWallPrefab;
-        private GameObject doorWall;
+        private List<GameObject> doorWallList = new List<GameObject>(3);
 
 
         private Vector3 entransLocation;
@@ -60,6 +60,8 @@ namespace ZhouSoftware{
             {
                 GameObject currentCorridor = Instantiate(normalPrefab, new Vector3(-corridorWidth * i, 0, corridorLength * i), Quaternion.Euler(0, 90 - direction * 90, 0));
                 corridorList.Add(currentCorridor);
+                GameObject currentDoorWall = Instantiate(doorWallPrefab, new Vector3(-corridorWidth * i - doorOffset.x * direction, doorOffset.y, corridorLength * i - doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
+                doorWallList.Add(currentDoorWall);
             }
             //create Front and Rear act as trigger collider. And create roomSign to indicate level. Assign them to current section
             Vector3 current = corridorList[1].transform.position;
@@ -72,9 +74,9 @@ namespace ZhouSoftware{
             level = 0; //start at level 0
 
             //Instantiate the doorwall in the beginning
-            doorWall = Instantiate(doorWallPrefab, new Vector3(current.x - doorOffset.x * direction, current.y + doorOffset.y, current.z - doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
+            //doorWallList[1] = Instantiate(doorWallPrefab, new Vector3(current.x - doorOffset.x * direction, current.y + doorOffset.y, current.z - doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
             //doorWall.transform.SetParent(corridorList[1].transform);
-            Vector3 temp = corridorList[0].transform.position; //the temp position is purely for the use of doorWall instantiation
+            //Vector3 temp = corridorList[0].transform.position; //the temp position is purely for the use of doorWall instantiation
             //doorWall = Instantiate(doorWallPrefab, new Vector3(temp.x + doorOffset.x * direction, temp.y + doorOffset.y, temp.z + doorOffset.z * direction), Quaternion.Euler(0, 90 - 90 * direction, 0));
             //doorWall.transform.SetParent(corridorList[0].transform);
         }
