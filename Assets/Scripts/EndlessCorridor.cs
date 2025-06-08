@@ -75,9 +75,20 @@ namespace ZhouSoftware{
             Front.transform.SetParent(corridorList[1].transform);
             Rear.transform.SetParent(corridorList[1].transform);
             level = 0; //start at level 0
-
-            
         }
+
+        void Update()
+        {
+            //Debug.Log($"Current level: {level}");
+            //Debug.Log($"Current direction: {direction}");
+
+            foreach(GameObject doorWall in doorWallList)
+            {
+                doorWall.transform.SetParent(doorHolder.transform);
+            }
+        }
+
+
 
         //player trigger Front boundary. Generate 1 new section and destroy 1 current section. Shift the corridorList
         public void OnFrontEnter()
@@ -105,11 +116,7 @@ namespace ZhouSoftware{
             corridorList[0] = corridorList[1];
             corridorList[1] = corridorList[2];
 
-            //if the current section is level 8 and normal section. Then delete the door so player can exit the game
-            if (level == 8 && corridorList[1].CompareTag("NormalSection"))
-            {
-                DeleteDoor(corridorList[1], "Door");
-            }
+            
             //shift the corridors in the scene
             //generate a new corridor in the front
             Vector3 current = corridorList[1].transform.position;
@@ -282,7 +289,6 @@ namespace ZhouSoftware{
             {
                 level = 8;
                 currentCorridor = Instantiate(normalPrefab, corridorPos, Quaternion.Euler(0, 90 - direction * 90, 0));
-                //DeleteDoor(currentCorridor, "Door");
                 corridorList[0] = currentCorridor;
             }
             else if (level < 7)
@@ -308,8 +314,6 @@ namespace ZhouSoftware{
             RearEntrance = Instantiate(boundaryPrefab, new Vector3(current.x, current.y, current.z - 1 * direction), Quaternion.Euler(90, 0, 0));
             RearEntrance.tag = "RearEntrance";
             RearEntrance.transform.SetParent(corridorList[1].transform);
-            //disable the door in reversed corridor
-            DeleteDoor(corridorList[0], "Door");
 
 
             direction *= -1;
@@ -341,7 +345,6 @@ namespace ZhouSoftware{
             {
                 currentCorridor = Instantiate(normalPrefab, new Vector3(current.x - corridorWidth * direction, 0, current.z + corridorLength * direction), Quaternion.Euler(0, 90 - direction * 90, 0));
                 corridorList[2] = currentCorridor;
-                //DeleteDoor(corridorList[1], "Door");
             }
 
             else if (level <= 7)
@@ -377,29 +380,6 @@ namespace ZhouSoftware{
 
         }
 
-        void DeleteDoor(GameObject parentObject, string tag)
-        {
-            // Check if the parent object exists
-            if (parentObject == null)
-            {
-                Debug.LogError("Parent object is null!");
-                return;
-            }
-
-            // Find the child object with the specified tag
-            GameObject child = FindChildWithTag(parentObject.transform, tag);
-            Destroy(child);
-
-            if (child != null)
-            {
-
-                Destroy(child);
-            }
-            else
-            {
-                Debug.LogError($"No child with tag '{tag}' found in the prefab.");
-            }
-        }
 
         GameObject FindChildWithTag(Transform parent, string tag)
         {
