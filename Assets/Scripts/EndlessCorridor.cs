@@ -40,6 +40,8 @@ namespace ZhouSoftware{
         private GameObject NormalRear;
         [SerializeField] GameObject doorWallPrefab;
         private List<GameObject> doorWallList = new List<GameObject>(3);
+        //Hold the reference to the doorholder object. Will be used as the parent of all the doorwall objects.
+        [SerializeField] private GameObject doorHolder;
 
 
         private Vector3 entransLocation;
