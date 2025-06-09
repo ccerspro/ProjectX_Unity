@@ -10,4 +10,8 @@
 
 6/9/2025：
             Start to working on a in game UI system. Consider porting the UI from Lunar Lock
-            After reconsideration. There will not be direct porting from Lunar Lock. Though the UI system version 1.0 of the ProjectX will share a very similiar design pattern compare to the one in Lunar Lock
+            After reconsideration. There will not be direct porting from Lunar Lock. Though the UI system version 1.0 of the ProjectX will share a very similiar design pattern compare to the one in Lunar Lock。
+            Investigating the complexity of adding a UI system into the game. Decided to focus on this later. The UI will have following feature:
+                Change mouse sensitivity
+                Change Audio
+                Change display
