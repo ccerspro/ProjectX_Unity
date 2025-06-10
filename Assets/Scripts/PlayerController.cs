@@ -80,6 +80,7 @@ namespace ZhouSoftware
             Vector2 input = moveAction.ReadValue<Vector2>();
             movementInput = new Vector3(input.x, 0, input.y).normalized;
             HandleFootsteps();
+
         }
         private void OnReset(InputAction.CallbackContext context)
         {
@@ -87,7 +88,17 @@ namespace ZhouSoftware
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
 
         }
-        
+
+        private void CheckForFall()
+        {
+            // Check if the player has fallen below a certain height
+            if (transform.position.y < -10f) // Adjust the threshold as needed
+            {
+                Debug.Log("Player has fallen below the threshold. Reloading scene...");
+                UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            }
+            
+        }
 
         private void HandleFootsteps()
         {
@@ -121,6 +132,8 @@ namespace ZhouSoftware
         {
             currentSpeed = normalSpeed;
         }
+
+
 
         
           
