@@ -1,4 +1,4 @@
-# The dev log of developing ProjectX
+﻿# The dev log of developing ProjectX
 
 5/15/25
     Start to make the doorwall modular and separate from the corridor prefabs.
@@ -15,3 +15,9 @@
                 Change mouse sensitivity
                 Change Audio
                 Change display
+
+6/15/2025：
+		Storyline reframe.
+
+7/15/2025：
+		Decided to change the game engine from Unity to UE5. The Unity will be remain a backup option.

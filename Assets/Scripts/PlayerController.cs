@@ -10,6 +10,8 @@ namespace ZhouSoftware
         public float sprintSpeed = 10f; // Sprint movement speed
         private float currentSpeed; // Active speed during movement
         
+        public bool IsMoving { get; private set; }
+
 
         private InputAction moveAction;
         private InputAction quitAction;
@@ -76,12 +78,16 @@ namespace ZhouSoftware
 
         private void Update()
         {
-            // Read movement input (WASD or Arrow keys)
             Vector2 input = moveAction.ReadValue<Vector2>();
             movementInput = new Vector3(input.x, 0, input.y).normalized;
+
+            IsMoving = movementInput.magnitude > 0.1f;
+
             HandleFootsteps();
 
-        }
+            CheckForFall(); // Check if the player has fallen below a certain height
+    }
+
         private void OnReset(InputAction.CallbackContext context)
         {
             // Relod the current scene

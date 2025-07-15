@@ -1,47 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-
 
 public class CameraController : MonoBehaviour
 {
     public Transform target; 
+    [Range(1f, 300f)] public float rotationSpeed = 300f;
 
-    [SerializeField]
-    [Range(1f, 300f)]
-    public float rotationSpeed = 300f;  
+    public float idleSwayAmount = 0.05f;
+    public float idleSwaySpeed = 1f;
+    public float movementSwayAmount = 0.15f;
+    public float movementSwaySpeed = 3f;
 
-    private float xRotation = 0f;  // Track vertical pitch rotation
+    private float xRotation = 0f;
     private PlayerInputActions playerInputActions;
-    private bool isRotating = false;  // Track if the camera is rotating
-    private Vector2 lookInput = Vector2.zero;  // Store input from mouse or joystick
+    private bool isRotating = false;
+    private Vector2 lookInput = Vector2.zero;
+
+    private float swayTimer = 0f;
+    private Vector3 initialLocalPosition;
+
+    private ZhouSoftware.PlayerController playerController;
 
     private void Start()
     {
-        // Hide and lock cursor to center of screen
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        initialLocalPosition = transform.localPosition;
+        playerController = target.GetComponent<ZhouSoftware.PlayerController>();
     }
 
     private void Awake()
     {
-        // Initialize input actions
         playerInputActions = new PlayerInputActions();
     }
 
     private void OnEnable()
     {
-        // Enable Look input and subscribe to events
         playerInputActions.Player.Look.performed += OnLookPerformed;
-        playerInputActions.Player.Look.canceled += OnLookCanceled;  // Stop rotation when input stops
+        playerInputActions.Player.Look.canceled += OnLookCanceled;
         playerInputActions.Player.Look.Enable();
     }
 
     private void OnDisable()
     {
-        // Unsubscribe to avoid memory leaks
         playerInputActions.Player.Look.performed -= OnLookPerformed;
         playerInputActions.Player.Look.canceled -= OnLookCanceled;
         playerInputActions.Player.Look.Disable();
@@ -49,48 +51,62 @@ public class CameraController : MonoBehaviour
 
     private void OnLookPerformed(InputAction.CallbackContext context)
     {
-        // Store the input values and mark as rotating
         lookInput = context.ReadValue<Vector2>();
         isRotating = true;
     }
 
     private void OnLookCanceled(InputAction.CallbackContext context)
     {
-        // Stop rotating when input stops
         isRotating = false;
-        lookInput = Vector2.zero;  // Reset input
+        lookInput = Vector2.zero;
     }
 
     private void Update()
-{
-    if (Input.GetKeyDown(KeyCode.Escape))
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        HandleCursorLock();
+        HandleRotation();
+        HandleIdleSway();
     }
 
-    if (Input.GetMouseButtonDown(0) && Cursor.lockState != CursorLockMode.Locked)
+    private void HandleCursorLock()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        if (Input.GetMouseButtonDown(0) && Cursor.lockState != CursorLockMode.Locked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
-    if (!isRotating) return;
+    private void HandleRotation()
+    {
+        if (!isRotating) return;
 
-    float mouseX = lookInput.x * rotationSpeed * Time.deltaTime;
-    float mouseY = lookInput.y * rotationSpeed * Time.deltaTime;
+        float mouseX = lookInput.x * rotationSpeed * Time.deltaTime;
+        float mouseY = lookInput.y * rotationSpeed * Time.deltaTime;
 
-    // Yaw — rotate the player horizontally
-    target.Rotate(Vector3.up * mouseX);
+        target.Rotate(Vector3.up * mouseX);
 
-    // Pitch — rotate the camera vertically (clamped)
-    xRotation -= mouseY;
-    xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-    transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-}
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+    }
 
+    private void HandleIdleSway()
+    {
+        if (playerController == null) return;
 
+        swayTimer += Time.deltaTime * (playerController.IsMoving ? movementSwaySpeed : idleSwaySpeed);
+        float swayAmount = playerController.IsMoving ? movementSwayAmount : idleSwayAmount;
 
+        float swayX = Mathf.Sin(swayTimer) * swayAmount;
+        float swayY = Mathf.Cos(swayTimer * 2f) * swayAmount * 0.5f;
 
-    
+        transform.localPosition = initialLocalPosition + new Vector3(swayX, swayY, 0f);
+    }
 }
