@@ -375,11 +375,6 @@ namespace ZhouSoftware{
 #endif
         }
 
-        public void OnUturn()
-        {
-
-        }
-
 
         GameObject FindChildWithTag(Transform parent, string tag)
         {

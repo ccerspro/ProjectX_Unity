@@ -27,9 +27,6 @@ public class PlayerCollisionNew : MonoBehaviour
             else if (other.CompareTag("SpecialRear")){
                 endlessCorridor.OnSpecialRearEnter();
             }
-            else if (other.CompareTag("Uturn")){
-                endlessCorridor.OnUturn();
-            }
             else if (other.CompareTag("ReEnter")){
                 endlessCorridor.OnReEnter(other);
             }
