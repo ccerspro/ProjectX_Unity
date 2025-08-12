@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class SampleAgentScript : MonoBehaviour
 {
-    public Transform target;
+    private Transform target;
     private NavMeshAgent agent;
     private Animator animator;
 
@@ -45,21 +45,19 @@ public class SampleAgentScript : MonoBehaviour
 
         if (hasLockedOn)
         {
-            
-            
-            
-                agent.isStopped = false;
-                agent.SetDestination(target.position);
+            agent.isStopped = false;
+            agent.SetDestination(target.position);
 
-                if (agent.velocity.magnitude > 0.1f)
-                {
-                    animator.SetBool("IsMoving", true);
-                    animator.Play("Walk_IP");
-                }
-                else
-                {
-                    animator.SetBool("IsMoving", false);
-                }
+            if (animator == null) return;
+            if (agent.velocity.magnitude > 0.1f)
+            {
+                animator.SetBool("IsMoving", true);
+                animator.Play("Walk_IP");
+            }
+            else
+            {
+                animator.SetBool("IsMoving", false);
+            }
             
         }
         else
