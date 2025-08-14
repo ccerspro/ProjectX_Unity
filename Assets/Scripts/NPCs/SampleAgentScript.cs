@@ -21,19 +21,36 @@ namespace ZhouSoftware
         //private bool isAttacking = false;
         private bool hasLockedOn = false;
 
+        void OnEnable()
+        {
+            if (PlayerLocator.TryGet(out target) == false)
+			{
+				PlayerLocator.OnAvailable += HandlePlayerAvailable;
+			}
+        }
+		
+		void OnDisable()
+		{
+			PlayerLocator.OnAvailable -= HandlePlayerAvailable;
+		}
+
+		private void HandlePlayerAvailable(Transform t)
+		{
+			target = t;
+			PlayerLocator.OnAvailable -= HandlePlayerAvailable; // one-shot
+		}
+
         void Start()
         {
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
 
-            TryFindTarget(); // Try finding target at start
         }
 
         void Update()
         {
             if (target == null)
             {
-                TryFindTarget();
                 agent.isStopped = true;
                 animator.SetBool("IsMoving", false);
                 hasLockedOn = false;
@@ -72,18 +89,7 @@ namespace ZhouSoftware
             }
         }
 
-        void TryFindTarget()
-        {
-            GameObject player = GameObject.FindWithTag("Player");
-            if (player != null)
-            {
-                target = player.transform;
-            }
-            else
-            {
-                target = null;
-            }
-        }
+        
 
         void OnTriggerEnter(Collider other)
         {

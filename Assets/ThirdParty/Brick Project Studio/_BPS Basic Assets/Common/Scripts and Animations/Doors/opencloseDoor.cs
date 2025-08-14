@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ZhouSoftware;
 
 namespace SojaExiles
 
@@ -12,7 +13,26 @@ namespace SojaExiles
 		public bool open;
 		public Transform Player;
 
-		void Start()
+        void OnEnable()
+        {
+            if (PlayerLocator.TryGet(out Player) == false)
+			{
+				PlayerLocator.OnAvailable += HandlePlayerAvailable;
+			}
+        }
+		
+		void OnDisable()
+		{
+			PlayerLocator.OnAvailable -= HandlePlayerAvailable;
+		}
+
+		private void HandlePlayerAvailable(Transform t)
+		{
+			Player = t;
+			PlayerLocator.OnAvailable -= HandlePlayerAvailable; // one-shot
+		}
+
+        void Start()
 		{
 			open = false;
 		}

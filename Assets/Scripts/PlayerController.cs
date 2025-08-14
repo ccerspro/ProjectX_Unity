@@ -47,6 +47,7 @@ namespace ZhouSoftware
 
         private void OnEnable()
         {
+            PlayerLocator.Set(transform);
             // Enable input actions
             moveAction = playerInputActions.Player.Move;
             moveAction.Enable();
@@ -67,6 +68,7 @@ namespace ZhouSoftware
 
         private void OnDisable()
         {
+            if (PlayerLocator.Player == transform) PlayerLocator.Clear();
             moveAction.Disable();
             playerInputActions.Player.Sprint.Disable();
             quitAction.Disable();
@@ -74,6 +76,7 @@ namespace ZhouSoftware
             playerInputActions.Player.Sprint.performed -= OnSprint;
             playerInputActions.Player.Sprint.canceled -= OnSprintRelease;
             quitAction.performed -= OnQuit;
+
         }
 
         private void Update()

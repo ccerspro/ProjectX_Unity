@@ -12,6 +12,25 @@ namespace SojaExiles
 		public bool open;
 		public Transform Player;
 
+		void OnEnable()
+        {
+            if (PlayerLocator.TryGet(out Player) == false)
+			{
+				PlayerLocator.OnAvailable += HandlePlayerAvailable;
+			}
+        }
+		
+		void OnDisable()
+		{
+			PlayerLocator.OnAvailable -= HandlePlayerAvailable;
+		}
+
+		private void HandlePlayerAvailable(Transform t)
+		{
+			Player = t;
+			PlayerLocator.OnAvailable -= HandlePlayerAvailable; // one-shot
+		}
+
 		void Start()
 		{
 			open = false;
