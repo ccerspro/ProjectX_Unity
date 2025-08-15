@@ -15,8 +15,6 @@ namespace ZhouSoftware
 
 
         private InputAction moveAction;
-        private InputAction quitAction;
-        private InputAction resetAction;
 
         [SerializeField] private GameObject flashlight; // Reference to the flashlight GameObject
 
@@ -34,8 +32,6 @@ namespace ZhouSoftware
         {
             // Initialize input actions
             playerInputActions = new PlayerInputActions();
-            quitAction = playerInputActions.Player.Quit;
-            resetAction = playerInputActions.Player.Reset;
 
             // Get Rigidbody component
             rb = GetComponent<Rigidbody>();
@@ -50,20 +46,25 @@ namespace ZhouSoftware
 
         private void OnEnable()
         {
+            // Set the player transform in PlayerLocator
             PlayerLocator.Set(transform);
+
             // Enable input actions
             moveAction = playerInputActions.Player.Move;
             moveAction.Enable();
-            quitAction.Enable();
-            resetAction.Enable();
+            playerInputActions.Player.Quit.Enable();
+            playerInputActions.Player.FlashLight.Enable();
+            playerInputActions.Player.Reset.Enable();
+            playerInputActions.Player.Sprint.Enable();
 
-            // Enable sprint actions
+
+            // Subscribe to events
+            playerInputActions.Player.FlashLight.performed += OnFlashLight;
             playerInputActions.Player.Sprint.performed += OnSprint;
             playerInputActions.Player.Sprint.canceled += OnSprintRelease;
-            playerInputActions.Player.Sprint.Enable();
-            quitAction.performed += OnQuit;
+            playerInputActions.Player.Quit.performed += OnQuit;
+            playerInputActions.Player.Reset.performed += OnReset;
 
-            resetAction.performed += OnReset;
 
             // Set default speed
             currentSpeed = normalSpeed;
@@ -74,12 +75,15 @@ namespace ZhouSoftware
             if (PlayerLocator.Player == transform) PlayerLocator.Clear();
             moveAction.Disable();
             playerInputActions.Player.Sprint.Disable();
-            quitAction.Disable();
-
+            playerInputActions.Player.Quit.Disable();
+            playerInputActions.Player.FlashLight.Disable();
+            playerInputActions.Player.Reset.Disable();
+            // Unsubscribe from events
             playerInputActions.Player.Sprint.performed -= OnSprint;
             playerInputActions.Player.Sprint.canceled -= OnSprintRelease;
-            quitAction.performed -= OnQuit;
-
+            playerInputActions.Player.Quit.performed -= OnQuit;
+            playerInputActions.Player.FlashLight.performed -= OnFlashLight;
+            playerInputActions.Player.Reset.performed -= OnReset;
         }
 
         private void Update()
