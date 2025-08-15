@@ -156,10 +156,12 @@ namespace ZhouSoftware
             if (flashlight.activeSelf)
             {
                 flashlight.SetActive(false); // Turn off the flashlight
+                Debug.Log("Flashlight turned off");
             }
             else
             {
                 flashlight.SetActive(true); // Turn on the flashlight
+                Debug.Log("Flashlight turned on");
             }
             // Toggle flashlight functionality here
             // This method can be used to toggle the flashlight on/off
