@@ -9,13 +9,16 @@ namespace ZhouSoftware
         public float normalSpeed = 5f; // Normal movement speed
         public float sprintSpeed = 10f; // Sprint movement speed
         private float currentSpeed; // Active speed during movement
-        
+
         public bool IsMoving { get; private set; }
+        public bool hasFlashlight = true;// Flag to check if the player has a flashlight
 
 
         private InputAction moveAction;
         private InputAction quitAction;
         private InputAction resetAction;
+
+        [SerializeField] private GameObject flashlight; // Reference to the flashlight GameObject
 
 
 
@@ -42,7 +45,7 @@ namespace ZhouSoftware
             }
 
 
-            
+
         }
 
         private void OnEnable()
@@ -59,7 +62,7 @@ namespace ZhouSoftware
             playerInputActions.Player.Sprint.canceled += OnSprintRelease;
             playerInputActions.Player.Sprint.Enable();
             quitAction.performed += OnQuit;
-            
+
             resetAction.performed += OnReset;
 
             // Set default speed
@@ -89,7 +92,7 @@ namespace ZhouSoftware
             HandleFootsteps();
 
             CheckForFall(); // Check if the player has fallen below a certain height
-    }
+        }
 
         private void OnReset(InputAction.CallbackContext context)
         {
@@ -106,7 +109,7 @@ namespace ZhouSoftware
                 Debug.Log("Player has fallen below the threshold. Reloading scene...");
                 UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             }
-            
+
         }
 
         private void HandleFootsteps()
@@ -142,11 +145,30 @@ namespace ZhouSoftware
             currentSpeed = normalSpeed;
         }
 
+        void OnFlashLight(InputAction.CallbackContext context)
+        {
+            if(!hasFlashlight) return; // Check if the player has a flashlight
+            if (flashlight == null)
+            {
+                Debug.LogWarning("Flashlight GameObject is not assigned.");
+                return;
+            }
+            if (flashlight.activeSelf)
+            {
+                flashlight.SetActive(false); // Turn off the flashlight
+            }
+            else
+            {
+                flashlight.SetActive(true); // Turn on the flashlight
+            }
+            // Toggle flashlight functionality here
+            // This method can be used to toggle the flashlight on/off
+            Debug.Log("Flashlight toggled");
+        }
 
 
-        
-          
-        
+
+
 
         private void OnQuit(InputAction.CallbackContext context)
         {
