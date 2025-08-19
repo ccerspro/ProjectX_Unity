@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7000732760560362771}
+  playerInput: {fileID: 0}
   rotationSpeed: 10
   idleSwayAmount: 0.05
   idleSwaySpeed: 1
@@ -173,6 +174,7 @@ GameObject:
   - component: {fileID: 4435274698297713094}
   - component: {fileID: 4608299346334132997}
   - component: {fileID: 6897411343053140791}
+  - component: {fileID: 3572078043674825578}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -321,6 +323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d581647d5d8fb5f4f91d3597e6fda2ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInput: {fileID: 3572078043674825578}
   normalSpeed: 4
   sprintSpeed: 4
   hasFlashlight: 1
@@ -340,6 +343,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DistanceOpen: 3
   text: {fileID: 0}
+--- !u!114 &3572078043674825578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7231734321813397011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: a61d4cf4bc9800b4cbc85b3dd55783e9,
+    type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1001 &7259615654873125553
 PrefabInstance:
   m_ObjectHideFlags: 0
