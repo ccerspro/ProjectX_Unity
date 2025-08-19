@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 538272253566610114}
   - component: {fileID: 263273110295834783}
+  - component: {fileID: 8405419532586169009}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -94,6 +95,29 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &8405419532586169009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 209550341000104743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &7878029528172922068
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,7 +128,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2165159543374856543}
   - component: {fileID: 6263676765081587065}
-  - component: {fileID: 4874447842572548684}
+  - component: {fileID: 2072470384488311636}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -189,7 +213,7 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &4874447842572548684
+--- !u!114 &2072470384488311636
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -236,7 +260,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9205993665078611813}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -785,7 +809,7 @@ PrefabInstance:
     - target: {fileID: 2200114559990214439, guid: 40399f95a6f26064ebdd3b08052bb9fc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.3154984
+      value: 5.8754997
       objectReference: {fileID: 0}
     - target: {fileID: 2200114559990214439, guid: 40399f95a6f26064ebdd3b08052bb9fc,
         type: 3}
@@ -864,7 +888,7 @@ PrefabInstance:
     - target: {fileID: 7265477102981145203, guid: 658e64758890bc24ba679c51e2cd2ab3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.3149986
+      value: 5.875
       objectReference: {fileID: 0}
     - target: {fileID: 7265477102981145203, guid: 658e64758890bc24ba679c51e2cd2ab3,
         type: 3}
@@ -943,7 +967,7 @@ PrefabInstance:
     - target: {fileID: 5434180270621396412, guid: 7769b6e68c1a90a458fec4955db6b2fd,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.1189985
+      value: 5.679
       objectReference: {fileID: 0}
     - target: {fileID: 5434180270621396412, guid: 7769b6e68c1a90a458fec4955db6b2fd,
         type: 3}

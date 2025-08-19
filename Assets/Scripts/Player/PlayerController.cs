@@ -160,11 +160,13 @@ namespace ZhouSoftware
             if (flashlight.activeSelf)
             {
                 flashlight.SetActive(false); // Turn off the flashlight
+                audioManager.Play("FlashlightClick"); // Play flashlight toggle sound
                 Debug.Log("Flashlight turned off");
             }
             else
             {
                 flashlight.SetActive(true); // Turn on the flashlight
+                audioManager.Play("FlashlightClick"); // Play flashlight toggle sound
                 Debug.Log("Flashlight turned on");
             }
             // Toggle flashlight functionality here

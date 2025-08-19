@@ -26,6 +26,11 @@ public class CameraController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        // Seed xRotation from whatever you set in the Inspector
+        float pitch = transform.localEulerAngles.x;
+        if (pitch > 180f) pitch -= 360f;              // map to [-180, 180]
+        xRotation = Mathf.Clamp(pitch, -90f, 90f);    // keep your clamp
+
         initialLocalPosition = transform.localPosition;
         playerController = target.GetComponent<ZhouSoftware.PlayerController>();
     }
