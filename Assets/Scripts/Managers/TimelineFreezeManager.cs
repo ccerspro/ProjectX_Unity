@@ -7,120 +7,108 @@ namespace ZhouSoftware
     public class TimelineFreezeManager : MonoBehaviour
     {
         [Header("References")]
-        public PlayableDirector playableDirector;
+        public PlayableDirector director;               // the director that plays your cutscene
+        public PlayerInput playerInput;                 // player's PlayerInput
+        public MonoBehaviour[] componentsToDisable;     // e.g., PlayerController, CameraController
+        public Rigidbody playerRigidbody;               // optional
 
-        [Tooltip("Gameplay scripts to disable during the cutscene (e.g., PlayerController, CameraController).")]
-        public MonoBehaviour[] componentsToDisable;
+        [Header("Behavior")]
+        [Tooltip("If true, keep UI working (switch Player->UI map). If false, all input is off.")]
+        public bool allowUI = false;
 
-        [Tooltip("Player Rigidbody (optional, set kinematic during cutscene).")]
-        public Rigidbody playerRigidbody;
-
-        [Tooltip("PlayerInput component (new Input System). We will Deactivate/Activate input here.")]
-        public PlayerInput playerInput;
-
-        [SerializeField] private ZhouSoftware.PlayerController playerController;
-
-        [SerializeField] private CameraController cameraController;
-
-        [Header("Options")]
-        [Tooltip("If true, pause Time.timeScale during the cutscene (world freezes). The Timeline will run in UnscaledGameTime.")]
+        [Tooltip("If true, pause Time.timeScale during cutscene. Timeline runs unscaled.")]
         public bool freezeWorld = false;
 
         bool locked;
         float prevTimeScale;
-        DirectorUpdateMode prevDirectorUpdateMode;
-        bool prevIsKinematic;
-        Vector3 savedVel, savedAngVel;
+        DirectorUpdateMode prevMode;
+        bool prevKinematic;
 
-        void OnEnable()
+        void Awake()
         {
-            if (playableDirector)
-            {
-                playableDirector.played += OnTimelinePlayed;
-                playableDirector.stopped += OnTimelineStopped;
-            }
+            if (!director) director = GetComponent<PlayableDirector>();
+            director.played  += OnPlayed;
+            director.stopped += OnStopped;
+            director.paused  += OnPaused; // for WrapMode = Hold
         }
 
-        void OnDisable()
+        void OnDestroy()
         {
-            
-            if (playableDirector)
-            {
-                playableDirector.played -= OnTimelinePlayed;
-                playableDirector.stopped -= OnTimelineStopped;
-            }
-            if (locked) Unlock();
+            if (!director) return;
+            director.played  -= OnPlayed;
+            director.stopped -= OnStopped;
+            director.paused  -= OnPaused;
         }
 
-        void OnTimelinePlayed(PlayableDirector d)
+        void Start()
         {
-            Debug.Log("Timeline started, freezing gameplay...");
+            // If the director already started before we subscribed (Play On Awake), catch up
+            if (director && director.state == PlayState.Playing) OnPlayed(director);
+        }
+
+        void OnPlayed(PlayableDirector d)
+        {
             if (locked) return;
             locked = true;
 
-            // Optionally pause the world, but keep Timeline running
             if (freezeWorld)
             {
+                prevMode = director.timeUpdateMode;
+                director.timeUpdateMode = DirectorUpdateMode.UnscaledGameTime;
                 prevTimeScale = Time.timeScale;
                 Time.timeScale = 0f;
-
-                prevDirectorUpdateMode = playableDirector.timeUpdateMode;
-                playableDirector.timeUpdateMode = DirectorUpdateMode.UnscaledGameTime;
             }
 
-            if (playerController) playerController.enabled = false;
-            if (cameraController) cameraController.enabled = false;
+            foreach (var m in componentsToDisable) if (m) m.enabled = false;
 
-            // Disable gameplay components (movement, camera controller, etc.)
-            foreach (var c in componentsToDisable)
-                if (c) c.enabled = false;
-
-            // Freeze physics on the player so animation/tracks don't fight it
             if (playerRigidbody)
             {
-                prevIsKinematic = playerRigidbody.isKinematic;
-                savedVel    = playerRigidbody.velocity;
-                savedAngVel = playerRigidbody.angularVelocity;
-
+                prevKinematic = playerRigidbody.isKinematic;
                 playerRigidbody.velocity = Vector3.zero;
                 playerRigidbody.angularVelocity = Vector3.zero;
                 playerRigidbody.isKinematic = true;
             }
 
-            // Turn off input (new Input System)
-            if (playerInput) playerInput.DeactivateInput();
-            Cursor.lockState = CursorLockMode.None; Cursor.visible = true;
+            if (playerInput)
+            {
+                if (allowUI) playerInput.SwitchCurrentActionMap("UI");
+                else         playerInput.DeactivateInput();
+            }
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible   = true;
         }
 
-        void OnTimelineStopped(PlayableDirector d) => Unlock();
+        void OnPaused(PlayableDirector d)
+        {
+            // End reached with WrapMode.Hold appears as paused
+            if (d.time >= d.duration - 0.0001f) Unlock();
+        }
+
+        void OnStopped(PlayableDirector d) => Unlock();
 
         void Unlock()
         {
-            Debug.Log("Timeline stopped, restoring gameplay...");
-            // Restore timescale / director mode
+            if (!locked) return;
+
+            if (playerRigidbody) playerRigidbody.isKinematic = prevKinematic;
+
+            foreach (var m in componentsToDisable) if (m) m.enabled = true;
+
+            if (playerInput)
+            {
+                if (allowUI) playerInput.SwitchCurrentActionMap("Player");
+                else         playerInput.ActivateInput();
+            }
+
             if (freezeWorld)
             {
-                playableDirector.timeUpdateMode = prevDirectorUpdateMode;
+                director.timeUpdateMode = prevMode;
                 Time.timeScale = prevTimeScale;
             }
 
-            // Restore physics
-            if (playerRigidbody)
-            {
-                playerRigidbody.isKinematic = prevIsKinematic;
-                playerRigidbody.velocity    = Vector3.zero;      // usually better than restoring old vel
-                playerRigidbody.angularVelocity = Vector3.zero;
-            }
-
-            if (playerController) playerController.enabled = true;
-            if (cameraController) cameraController.enabled = true;
-
-            // Re-enable gameplay
-            foreach (var c in componentsToDisable)
-                if (c) c.enabled = true;
-
-            if (playerInput) playerInput.ActivateInput();
-            Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible   = false;
 
             locked = false;
         }

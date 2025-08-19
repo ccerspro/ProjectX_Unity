@@ -1,192 +1,129 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace ZhouSoftware
 {
+    [RequireComponent(typeof(Rigidbody))]
     public class PlayerController : MonoBehaviour
     {
-        public float normalSpeed = 5f; // Normal movement speed
-        public float sprintSpeed = 10f; // Sprint movement speed
-        private float currentSpeed; // Active speed during movement
+        [Header("Input")]
+        [SerializeField] private PlayerInput playerInput;   // drag same PlayerInput
 
-        public bool IsMoving { get; private set; }
-        public bool hasFlashlight = true;// Flag to check if the player has a flashlight
+        [Header("Movement")]
+        public float normalSpeed = 5f;
+        public float sprintSpeed = 10f;
 
+        [Header("Equipment")]
+        public bool hasFlashlight = true;
+        [SerializeField] private GameObject flashlight;
 
-        private InputAction moveAction;
-
-        [SerializeField] private GameObject flashlight; // Reference to the flashlight GameObject
-
-
-
-        private Rigidbody rb; // Reference to Rigidbody component
-        private Vector3 movementInput; // Stores movement direction
-
-        private PlayerInputActions playerInputActions;
-        //public InfiniteCorridor infiniteCorridor;
+        [Header("Audio")]
         public AudioManager audioManager;
 
+        public bool IsMoving { get; private set; }
 
-        private void Awake()
+        Rigidbody rb;
+        Vector3 movementInput;
+        float currentSpeed;
+
+        // Actions
+        InputAction moveAction, sprintAction, quitAction, resetAction, flashlightAction;
+
+        void Awake()
         {
-            // Initialize input actions
-            playerInputActions = new PlayerInputActions();
-
-            // Get Rigidbody component
+            if (!playerInput) playerInput = GetComponent<PlayerInput>();
             rb = GetComponent<Rigidbody>();
-            if (rb == null)
-            {
-                Debug.LogError("Rigidbody not found on PlayerController GameObject.");
-            }
-
-
-
+            rb.freezeRotation = true; // simple way to avoid physics tilting
         }
 
-        private void OnEnable()
+        void OnEnable()
         {
-            // Set the player transform in PlayerLocator
+            // Register globally if you use PlayerLocator elsewhere
             PlayerLocator.Set(transform);
 
-            // Enable input actions
-            moveAction = playerInputActions.Player.Move;
-            moveAction.Enable();
-            playerInputActions.Player.Quit.Enable();
-            playerInputActions.Player.FlashLight.Enable();
-            playerInputActions.Player.Reset.Enable();
-            playerInputActions.Player.Sprint.Enable();
+            var a = playerInput.actions;
+            moveAction       = a.FindAction("Move",       true);
+            sprintAction     = a.FindAction("Sprint",     true);
+            quitAction       = a.FindAction("Quit",       true);
+            resetAction      = a.FindAction("Reset",      true);
+            flashlightAction = a.FindAction("FlashLight", true);
 
+            sprintAction.performed += OnSprint;
+            sprintAction.canceled  += OnSprintRelease;
+            quitAction.performed   += OnQuit;
+            resetAction.performed  += OnReset;
+            flashlightAction.performed += OnFlashLight;
 
-            // Subscribe to events
-            playerInputActions.Player.FlashLight.performed += OnFlashLight;
-            playerInputActions.Player.Sprint.performed += OnSprint;
-            playerInputActions.Player.Sprint.canceled += OnSprintRelease;
-            playerInputActions.Player.Quit.performed += OnQuit;
-            playerInputActions.Player.Reset.performed += OnReset;
-
-
-            // Set default speed
             currentSpeed = normalSpeed;
         }
 
-        private void OnDisable()
+        void OnDisable()
         {
             if (PlayerLocator.Player == transform) PlayerLocator.Clear();
-            moveAction.Disable();
-            playerInputActions.Player.Sprint.Disable();
-            playerInputActions.Player.Quit.Disable();
-            playerInputActions.Player.FlashLight.Disable();
-            playerInputActions.Player.Reset.Disable();
-            // Unsubscribe from events
-            playerInputActions.Player.Sprint.performed -= OnSprint;
-            playerInputActions.Player.Sprint.canceled -= OnSprintRelease;
-            playerInputActions.Player.Quit.performed -= OnQuit;
-            playerInputActions.Player.FlashLight.performed -= OnFlashLight;
-            playerInputActions.Player.Reset.performed -= OnReset;
+            sprintAction.performed -= OnSprint;
+            sprintAction.canceled  -= OnSprintRelease;
+            quitAction.performed   -= OnQuit;
+            resetAction.performed  -= OnReset;
+            flashlightAction.performed -= OnFlashLight;
         }
 
-        private void Update()
+        void Update()
         {
-            Vector2 input = moveAction.ReadValue<Vector2>();
-            movementInput = new Vector3(input.x, 0, input.y).normalized;
+            Vector2 mv = moveAction.ReadValue<Vector2>();
+            movementInput = new Vector3(mv.x, 0f, mv.y).normalized;
 
-            IsMoving = movementInput.magnitude > 0.1f;
-
+            IsMoving = movementInput.sqrMagnitude > 0.01f;
             HandleFootsteps();
-
-            CheckForFall(); // Check if the player has fallen below a certain height
+            CheckForFall();
         }
 
-        private void OnReset(InputAction.CallbackContext context)
+        void FixedUpdate()
         {
-            // Relod the current scene
-            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
-
+            // velocity-based movement (keeps gravity)
+            Vector3 vel = transform.TransformDirection(movementInput) * currentSpeed;
+            rb.velocity = new Vector3(vel.x, rb.velocity.y, vel.z);
         }
 
-        private void CheckForFall()
-        {
-            // Check if the player has fallen below a certain height
-            if (transform.position.y < -10f) // Adjust the threshold as needed
-            {
-                Debug.Log("Player has fallen below the threshold. Reloading scene...");
-                UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
-            }
+        void OnSprint(InputAction.CallbackContext _)        => currentSpeed = sprintSpeed;
+        void OnSprintRelease(InputAction.CallbackContext _) => currentSpeed = normalSpeed;
 
+        void OnFlashLight(InputAction.CallbackContext _)
+        {
+            if (!hasFlashlight || !flashlight) return;
+            bool on = !flashlight.activeSelf;
+            flashlight.SetActive(on);
+            if (audioManager) audioManager.Play("FlashlightClick");
         }
 
-        private void HandleFootsteps()
+        void OnQuit(InputAction.CallbackContext _)
         {
-            if (movementInput.magnitude > 0.1f) // Check if the player is moving
-            {
-                if (!audioManager.IsPlaying("FootStep")) // Check if the sound is already playing
-                {
-                    audioManager.Play("FootStep"); // Start playing the footstep sound
-                }
-            }
-            else
-            {
-                audioManager.Stop("FootStep"); // Stop playing when the player is idle
-            }
-        }
-
-
-
-        private void FixedUpdate()
-        {
-            // Apply movement using Rigidbody's velocity
-            rb.velocity = transform.TransformDirection(movementInput) * currentSpeed + new Vector3(0, rb.velocity.y, 0);
-        }
-
-        private void OnSprint(InputAction.CallbackContext context)
-        {
-            currentSpeed = sprintSpeed;
-        }
-
-        private void OnSprintRelease(InputAction.CallbackContext context)
-        {
-            currentSpeed = normalSpeed;
-        }
-
-        void OnFlashLight(InputAction.CallbackContext context)
-        {
-            if(!hasFlashlight) return; // Check if the player has a flashlight
-            if (flashlight == null)
-            {
-                Debug.LogWarning("Flashlight GameObject is not assigned.");
-                return;
-            }
-            if (flashlight.activeSelf)
-            {
-                flashlight.SetActive(false); // Turn off the flashlight
-                audioManager.Play("FlashlightClick"); // Play flashlight toggle sound
-                Debug.Log("Flashlight turned off");
-            }
-            else
-            {
-                flashlight.SetActive(true); // Turn on the flashlight
-                audioManager.Play("FlashlightClick"); // Play flashlight toggle sound
-                Debug.Log("Flashlight turned on");
-            }
-            // Toggle flashlight functionality here
-            // This method can be used to toggle the flashlight on/off
-            Debug.Log("Flashlight toggled");
-        }
-
-
-
-
-
-        private void OnQuit(InputAction.CallbackContext context)
-        {
-            // Quit the application
             Debug.Log("Quitting the game...");
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
             Application.Quit();
         }
+
+        void OnReset(InputAction.CallbackContext _)
+        {
+            var s = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(s.name);
+        }
+
+        void HandleFootsteps()
+        {
+            if (!audioManager) return;
+            if (IsMoving) { if (!audioManager.IsPlaying("FootStep")) audioManager.Play("FootStep"); }
+            else          { audioManager.Stop("FootStep"); }
+        }
+
+        void CheckForFall()
+        {
+            if (transform.position.y < -10f)
+            {
+                var s = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+                UnityEngine.SceneManagement.SceneManager.LoadScene(s.name);
+            }
+        }
     }
 }
-

@@ -3,114 +3,138 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
-    public Transform target; 
+    [Header("Target")]
+    public Transform target;                         // your player root (yaw on this)
+
+    [Header("Look")]
+    [SerializeField] private PlayerInput playerInput; // drag Player's PlayerInput here
     [Range(1f, 300f)] public float rotationSpeed = 300f;
 
+    [Header("Sway")]
     public float idleSwayAmount = 0.05f;
-    public float idleSwaySpeed = 1f;
+    public float idleSwaySpeed  = 1f;
     public float movementSwayAmount = 0.15f;
-    public float movementSwaySpeed = 3f;
+    public float movementSwaySpeed  = 3f;
 
-    private float xRotation = 0f;
-    private PlayerInputActions playerInputActions;
-    private bool isRotating = false;
-    private Vector2 lookInput = Vector2.zero;
-
-    private float swayTimer = 0f;
+    // internals
+    private float xRotation;                         // camera (pitch)
+    private bool  isRotating;
+    private Vector2 lookInput;
+    private float swayTimer;
     private Vector3 initialLocalPosition;
-
     private ZhouSoftware.PlayerController playerController;
 
-    private void Start()
+    private InputAction lookAction;
+    private bool readyForLook, ignoreNextDelta;
+
+    void Awake()
+    {
+        if (!playerInput) playerInput = GetComponentInParent<PlayerInput>();
+    }
+
+    void OnEnable()
+    {
+        var a = playerInput.actions;
+        lookAction = a.FindAction("Look", throwIfNotFound: true);
+        lookAction.performed += OnLookPerformed;
+        lookAction.canceled  += OnLookCanceled;
+    }
+
+    void OnDisable()
+    {
+        if (lookAction != null)
+        {
+            lookAction.performed -= OnLookPerformed;
+            lookAction.canceled  -= OnLookCanceled;
+        }
+    }
+
+    private System.Collections.IEnumerator Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // Seed xRotation from whatever you set in the Inspector
-        float pitch = transform.localEulerAngles.x;
-        if (pitch > 180f) pitch -= 360f;              // map to [-180, 180]
-        xRotation = Mathf.Clamp(pitch, -90f, 90f);    // keep your clamp
+        // Seed pitch from authored pose
+        float pitch = transform.localEulerAngles.x; if (pitch > 180f) pitch -= 360f;
+        xRotation = Mathf.Clamp(pitch, -90f, 90f);
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
         initialLocalPosition = transform.localPosition;
-        playerController = target.GetComponent<ZhouSoftware.PlayerController>();
+        playerController = target ? target.GetComponent<ZhouSoftware.PlayerController>() : null;
+
+        // Wait one frame so any other Start() that touches rotation runs first
+        yield return null;
+        readyForLook = true;
+        ignoreNextDelta = true; // swallow first spike after lock/enable
     }
 
-    private void Awake()
+    void OnApplicationFocus(bool focus)
     {
-        playerInputActions = new PlayerInputActions();
+        if (focus && Cursor.lockState == CursorLockMode.Locked)
+            ignoreNextDelta = true;
     }
 
-    private void OnEnable()
+    void OnLookPerformed(InputAction.CallbackContext ctx)
     {
-        playerInputActions.Player.Look.performed += OnLookPerformed;
-        playerInputActions.Player.Look.canceled += OnLookCanceled;
-        playerInputActions.Player.Look.Enable();
-    }
-
-    private void OnDisable()
-    {
-        playerInputActions.Player.Look.performed -= OnLookPerformed;
-        playerInputActions.Player.Look.canceled -= OnLookCanceled;
-        playerInputActions.Player.Look.Disable();
-    }
-
-    private void OnLookPerformed(InputAction.CallbackContext context)
-    {
-        lookInput = context.ReadValue<Vector2>();
+        if (!readyForLook || Cursor.lockState != CursorLockMode.Locked) return;
+        if (ignoreNextDelta) { ignoreNextDelta = false; return; }
+        lookInput = ctx.ReadValue<Vector2>();
         isRotating = true;
     }
 
-    private void OnLookCanceled(InputAction.CallbackContext context)
+    void OnLookCanceled(InputAction.CallbackContext _)
     {
         isRotating = false;
         lookInput = Vector2.zero;
     }
 
-    private void Update()
+    void Update()
     {
         HandleCursorLock();
         HandleRotation();
         HandleIdleSway();
     }
 
-    private void HandleCursorLock()
+    void HandleCursorLock()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-
         if (Input.GetMouseButtonDown(0) && Cursor.lockState != CursorLockMode.Locked)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            ignoreNextDelta = true;
         }
     }
 
-    private void HandleRotation()
+    void HandleRotation()
     {
-        if (!isRotating) return;
+        if (!isRotating || target == null) return;
 
+        // If your action is raw pixel delta, keeping Time.deltaTime is fine (tune speed).
         float mouseX = lookInput.x * rotationSpeed * Time.deltaTime;
         float mouseY = lookInput.y * rotationSpeed * Time.deltaTime;
 
-        target.Rotate(Vector3.up * mouseX);
+        // yaw on player root
+        target.Rotate(Vector3.up * mouseX, Space.World);
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        // pitch on camera (local)
+        xRotation = Mathf.Clamp(xRotation - mouseY, -90f, 90f);
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 
-    private void HandleIdleSway()
+    void HandleIdleSway()
     {
-        if (playerController == null) return;
+        if (!playerController) return;
 
         swayTimer += Time.deltaTime * (playerController.IsMoving ? movementSwaySpeed : idleSwaySpeed);
-        float swayAmount = playerController.IsMoving ? movementSwayAmount : idleSwayAmount;
+        float amt  = playerController.IsMoving ? movementSwayAmount : idleSwayAmount;
 
-        float swayX = Mathf.Sin(swayTimer) * swayAmount;
-        float swayY = Mathf.Cos(swayTimer * 2f) * swayAmount * 0.5f;
+        float swayX = Mathf.Sin(swayTimer) * amt;
+        float swayY = Mathf.Cos(swayTimer * 2f) * amt * 0.5f;
 
         transform.localPosition = initialLocalPosition + new Vector3(swayX, swayY, 0f);
     }
