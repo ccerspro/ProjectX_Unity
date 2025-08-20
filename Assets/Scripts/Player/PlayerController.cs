@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ZhouSoftware.Inventory;
 
 namespace ZhouSoftware
 {
@@ -14,7 +15,9 @@ namespace ZhouSoftware
         public float sprintSpeed = 10f;
 
         [Header("Equipment")]
-        public bool hasFlashlight = true;
+        [SerializeField] private PlayerInventory inventory; // drag PlayerInventory
+        [SerializeField] private ItemDefinition flashlightItem; // drag flashlight item definition
+        //public bool hasFlashlight = true;
         [SerializeField] private GameObject flashlight;
 
         [Header("Audio")]
@@ -89,7 +92,7 @@ namespace ZhouSoftware
 
         void OnFlashLight(InputAction.CallbackContext _)
         {
-            if (!hasFlashlight || !flashlight) return;
+            if (!inventory || !flashlight || !flashlightItem || !inventory.Has(flashlightItem)) return;
             bool on = !flashlight.activeSelf;
             flashlight.SetActive(on);
             if (audioManager) audioManager.Play("FlashlightClick");
