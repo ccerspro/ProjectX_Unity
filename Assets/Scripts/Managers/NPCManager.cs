@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Rendering;
 using UnityEngine;
 
-public class NpcManager : MonoBehaviour
+public class NPCManager : MonoBehaviour
 {
     Queue<GameObject> npcQueue = new Queue<GameObject>();
     LinkedList<GameObject> npcList = new LinkedList<GameObject>();
