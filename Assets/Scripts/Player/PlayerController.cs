@@ -17,11 +17,8 @@ namespace ZhouSoftware
         [Header("Equipment")]
         [SerializeField] private PlayerInventory inventory; // drag PlayerInventory
         [SerializeField] private ItemDefinition flashlightItem; // drag flashlight item definition
-        //public bool hasFlashlight = true;
         [SerializeField] private GameObject flashlight;
 
-        [Header("Audio")]
-        public AudioManager audioManager;
 
         public bool IsMoving { get; private set; }
 
@@ -95,7 +92,7 @@ namespace ZhouSoftware
             if (!inventory || !flashlight || !flashlightItem || !inventory.Has(flashlightItem)) return;
             bool on = !flashlight.activeSelf;
             flashlight.SetActive(on);
-            if (audioManager) audioManager.Play("FlashlightClick");
+            AudioManager.I.PlaySFX("flashlight_toggle", transform.position);
         }
 
         void OnQuit(InputAction.CallbackContext _)
@@ -115,9 +112,8 @@ namespace ZhouSoftware
 
         void HandleFootsteps()
         {
-            if (!audioManager) return;
-            if (IsMoving) { if (!audioManager.IsPlaying("FootStep")) audioManager.Play("FootStep"); }
-            else          { audioManager.Stop("FootStep"); }
+            if (IsMoving) { if (!AudioManager.I.IsSFXPlaying("footstep_wood")) AudioManager.I.PlaySFX("footstep_wood"); }
+            else          { AudioManager.I.StopSFX("footstep_wood"); }
         }
 
         void CheckForFall()

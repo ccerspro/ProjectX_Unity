@@ -15,7 +15,7 @@ public class FPSController : MonoBehaviour
     public float lookSpeed = 2.0f;
     public float lookXLimit = 45.0f;
 
-    [SerializeField] private AudioManager audioManager;
+    //[SerializeField] private AudioManager audioManager;
 
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
@@ -73,21 +73,7 @@ public class FPSController : MonoBehaviour
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
             transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
         }
-        HandleFootsteps();
     }
 
-    private void HandleFootsteps()
-        {
-            if (characterController.isGrounded && characterController.velocity.magnitude > 0.1f) // Check if the player is moving
-            {
-                if (!audioManager.IsPlaying("FootStep")) // Check if the sound is already playing
-                {
-                    audioManager.Play("FootStep"); // Start playing the footstep sound
-                }
-            }
-            else
-            {
-                audioManager.Stop("FootStep"); // Stop playing when the player is idle
-            }
-        }
+    
 }

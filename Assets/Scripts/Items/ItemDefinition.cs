@@ -4,7 +4,7 @@ namespace ZhouSoftware.Inventory
 {
     public enum ItemKind { KeyItem, Equipment, Consumable }
 
-    [CreateAssetMenu(menuName = "ZhouSoftware/Item Definition", fileName = "NewItem")]
+    [CreateAssetMenu(menuName = "ZhouSoftware/Item/Item Definition", fileName = "NewItem")]
     public class ItemDefinition : ScriptableObject
     {
         public string id;                    // unique string (e.g., "flashlight", "key_lobby")

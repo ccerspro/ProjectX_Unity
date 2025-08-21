@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ZhouSoftware.Inventory
 {
-    [CreateAssetMenu(menuName = "ZhouSoftware/Item Database", fileName = "ItemDatabase")]
+    [CreateAssetMenu(menuName = "ZhouSoftware/Item/Item Database", fileName = "ItemDatabase")]
     public class ItemDatabase : ScriptableObject
     {
         public List<ItemDefinition> items = new();
