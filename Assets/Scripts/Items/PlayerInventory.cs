@@ -9,7 +9,8 @@ namespace ZhouSoftware.Inventory
     // It can be extended to include more complex inventory management features.
     public class PlayerInventory : MonoBehaviour
     {
-        [SerializeField]
+        public static PlayerInventory I { get; private set; }
+        [Serializable]
         struct Entry
         {
             public ItemDefinition item;
@@ -23,6 +24,13 @@ namespace ZhouSoftware.Inventory
 
         public event Action<ItemDefinition, int> OnItemAdded;
         public event Action<ItemDefinition, int> OnItemRemoved;
+
+        void Awake()
+        {
+            if (I && I != this) { Destroy(gameObject); return; }
+            I = this; DontDestroyOnLoad(gameObject);
+        }
+
 
         public bool Has(ItemDefinition item)
         {

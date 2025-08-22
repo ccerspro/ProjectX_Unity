@@ -15,7 +15,6 @@ namespace ZhouSoftware
         public float sprintSpeed = 10f;
 
         [Header("Equipment")]
-        [SerializeField] private PlayerInventory inventory; // drag PlayerInventory
         [SerializeField] private ItemDefinition flashlightItem; // drag flashlight item definition
         [SerializeField] private GameObject flashlight;
 
@@ -89,7 +88,7 @@ namespace ZhouSoftware
 
         void OnFlashLight(InputAction.CallbackContext _)
         {
-            if (!inventory || !flashlight || !flashlightItem || !inventory.Has(flashlightItem)) return;
+            if (!PlayerInventory.I || !flashlight || !flashlightItem || !PlayerInventory.I.Has(flashlightItem)) return;
             bool on = !flashlight.activeSelf;
             flashlight.SetActive(on);
             AudioManager.I.PlaySFX("flashlight_toggle", transform.position);

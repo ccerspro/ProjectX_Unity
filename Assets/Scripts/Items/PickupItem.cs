@@ -62,10 +62,9 @@ public class PickupItem : MonoBehaviour
 
     void TryGiveTo(Transform who)
     {
-        var inv = who.GetComponent<PlayerInventory>() ?? who.GetComponentInParent<PlayerInventory>();
-        if (!inv) return;
+        if (!PlayerInventory.I) return;
 
-        if (inv.Add(item, Mathf.Max(1, amount)))
+        if (PlayerInventory.I.Add(item, Mathf.Max(1, amount)))
         {
             if (sfxOnPickup) sfxOnPickup.Play();
             if (destroyOnPickup) Destroy(gameObject);
