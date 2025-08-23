@@ -43,6 +43,7 @@ public class PickupItem : MonoBehaviour
     // Called every frame while the mouse hovers this object's collider
     void OnMouseOver()
     {
+        AimManager.I?.SetFocusedAim();
         if (!player || !item) return;
 
         // Optional: only allow pickup while in gameplay (cursor locked)
@@ -60,6 +61,11 @@ public class PickupItem : MonoBehaviour
             TryGiveTo(player);
     }
 
+    void OnMouseExit()
+    {
+        AimManager.I?.SetDefaultAim();
+    }
+
     void TryGiveTo(Transform who)
     {
         if (!PlayerInventory.I) return;
@@ -69,6 +75,7 @@ public class PickupItem : MonoBehaviour
             if (sfxOnPickup) sfxOnPickup.Play();
             if (destroyOnPickup) Destroy(gameObject);
             else gameObject.SetActive(false);
+            AimManager.I?.SetDefaultAim();
         }
     }
 

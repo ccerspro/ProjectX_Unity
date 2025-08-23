@@ -42,8 +42,9 @@ namespace SojaExiles
 				if (Player)
 				{
 					float dist = Vector3.Distance(Player.position, transform.position);
-					if (dist < 15)
+					if (dist < 2f)
 					{
+						AimManager.I?.SetFocusedAim();
 						if (open == false)
 						{
 							if (Input.GetMouseButtonDown(0))
@@ -70,7 +71,12 @@ namespace SojaExiles
 
 		}
 
-		IEnumerator opening()
+        void OnMouseExit()
+        {
+            AimManager.I?.SetDefaultAim();
+        }
+
+        IEnumerator opening()
 		{
 			print("you are opening the door");
 			openandclose1.Play("Opening 1");
