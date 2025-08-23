@@ -7,6 +7,7 @@ namespace DoorScript
     public class Door : MonoBehaviour
     {
         public bool open;
+        public bool locked;
         public float smooth = 1.0f;
         private float DoorOpenAngle = -90.0f;
         private float DoorCloseAngle = 0.0f;

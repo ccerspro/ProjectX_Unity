@@ -43,7 +43,7 @@ public class PickupItem : MonoBehaviour
     // Called every frame while the mouse hovers this object's collider
     void OnMouseOver()
     {
-        AimManager.I?.SetFocusedAim();
+        
         if (!player || !item) return;
 
         // Optional: only allow pickup while in gameplay (cursor locked)
@@ -51,7 +51,7 @@ public class PickupItem : MonoBehaviour
 
         // Range check (fast sqr distance)
         if ((player.position - transform.position).sqrMagnitude > pickupRange * pickupRange) return;
-
+        AimManager.I?.SetFocusedAim();
         // Require a click, or auto-pick if not required
         bool clicked =
             (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) ||
@@ -63,6 +63,7 @@ public class PickupItem : MonoBehaviour
 
     void OnMouseExit()
     {
+        Debug.Log("Mouse exit pickup");
         AimManager.I?.SetDefaultAim();
     }
 

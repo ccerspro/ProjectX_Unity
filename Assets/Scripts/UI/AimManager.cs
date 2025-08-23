@@ -15,7 +15,7 @@ public class AimManager : MonoBehaviour
     [SerializeField] CanvasGroup defaultGroup;
     [SerializeField] CanvasGroup focusedGroup;
 
-    public AimState _state = AimState.Default;
+    AimState _state = AimState.Default;
     Coroutine _fadeCo;
 
     void Awake()
@@ -54,12 +54,13 @@ public class AimManager : MonoBehaviour
         _state = state;
         if (instant || !defaultGroup || !focusedGroup)
         {
-            if (defaultAim) defaultAim.SetActive(state == AimState.Default);
-            if (focusedAim) focusedAim.SetActive(state == AimState.Focused);
+            if (defaultGroup) defaultGroup.alpha = state == AimState.Default ? 1f : 0f;
+            if (focusedGroup) focusedGroup.alpha = state == AimState.Focused ? 1f : 0f;
             return;
         }
 
         if (_fadeCo != null) StopCoroutine(_fadeCo);
+        Debug.Log("Fading aim to " + state);
         _fadeCo = StartCoroutine(FadeTo(state));
     }
 
@@ -85,9 +86,6 @@ public class AimManager : MonoBehaviour
 
         defaultGroup.alpha = dTo;
         focusedGroup.alpha = fTo;
-
-        if (defaultAim) defaultAim.SetActive(dTo > 0.99f);
-        if (focusedAim) focusedAim.SetActive(fTo > 0.99f);
         _fadeCo = null;
     }
 
