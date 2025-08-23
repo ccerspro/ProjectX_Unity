@@ -36,45 +36,18 @@ namespace SojaExiles
 			open = false;
 		}
 
-		void OnMouseOver()
+		public void handleDoor()
 		{
+			if (open)
 			{
-				if (Player)
-				{
-					float dist = Vector3.Distance(Player.position, transform.position);
-					if (dist < 2f)
-					{
-						AimManager.I?.SetFocusedAim();
-						if (open == false)
-						{
-							if (Input.GetMouseButtonDown(0))
-							{
-								StartCoroutine(opening());
-							}
-						}
-						else
-						{
-							if (open == true)
-							{
-								if (Input.GetMouseButtonDown(0))
-								{
-									StartCoroutine(closing());
-								}
-							}
-
-						}
-
-					}
-				}
-
+				StartCoroutine(closing());
 			}
-
+			else
+			{
+				StartCoroutine(opening());
+			}
 		}
 
-        void OnMouseExit()
-        {
-            AimManager.I?.SetDefaultAim();
-        }
 
         IEnumerator opening()
 		{

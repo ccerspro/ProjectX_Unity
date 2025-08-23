@@ -15,7 +15,7 @@ public class AimManager : MonoBehaviour
     [SerializeField] CanvasGroup defaultGroup;
     [SerializeField] CanvasGroup focusedGroup;
 
-    AimState _state = AimState.Default;
+    public AimState _state = AimState.Default;
     Coroutine _fadeCo;
 
     void Awake()
@@ -50,6 +50,7 @@ public class AimManager : MonoBehaviour
 
     public void SetState(AimState state, bool instant = false)
     {
+        if (state == _state) return;
         _state = state;
         if (instant || !defaultGroup || !focusedGroup)
         {
