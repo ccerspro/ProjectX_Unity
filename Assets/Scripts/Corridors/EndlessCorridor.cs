@@ -18,8 +18,8 @@ namespace ZhouSoftware{
     public class EndlessCorridor : MonoBehaviour
     {
         List<GameObject> corridorList = new List<GameObject>();
-        [SerializeField] private float corridorLength = 35;
-        [SerializeField] private float corridorWidth = 5;
+        [SerializeField] private float corridorLength = 30;
+        [SerializeField] private float corridorWidth = 3;
         [SerializeField] GameObject normalPrefab;
         [SerializeField] List<GameObject> anomalyPrefab;
         //a collider object represent the boundary in the game. Used as trigger. Need to be tagged by this script.
